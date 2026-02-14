@@ -1,0 +1,384 @@
+{
+  "component": {
+    "type": "section",
+    "name": "hero-section",
+    "styles": {
+      "width": 800,
+      "backgroundColor": "#f8f9fa",
+      "padding": 48,
+      "borderRadius": 16,
+      "shadowColor": "#000000",
+      "shadowOffset": { "width": 0, "height": 8 },
+      "shadowOpacity": 0.1,
+      "shadowRadius": 24,
+      "gap": 32
+    },
+    "children": [
+      {
+        "type": "header",
+        "name": "hero-header",
+        "styles": {
+          "gap": 16
+        },
+        "children": [
+          {
+            "type": "h1",
+            "name": "main-heading",
+            "text": "Welcome to Modern Web Design",
+            "styles": {
+              "fontSize": 48,
+              "fontWeight": "700",
+              "color": "#1a202c",
+              "lineHeight": 56,
+              "marginBottom": 8
+            }
+          },
+          {
+            "type": "p",
+            "name": "subtitle",
+            "text": "Build beautiful interfaces that work seamlessly in Figma",
+            "styles": {
+              "fontSize": 20,
+              "fontWeight": "400",
+              "color": "#4a5568",
+              "lineHeight": 32
+            }
+          }
+        ]
+      },
+      {
+        "type": "div",
+        "name": "feature-grid",
+        "styles": {
+          "flexDirection": "row",
+          "gap": 24,
+          "marginTop": 32
+        },
+        "children": [
+          {
+            "type": "article",
+            "name": "feature-card-1",
+            "styles": {
+              "width": 240,
+              "backgroundColor": "#ffffff",
+              "padding": 24,
+              "borderRadius": 12,
+              "borderWidth": 1,
+              "borderColor": "#e2e8f0",
+              "gap": 12
+            },
+            "children": [
+              {
+                "type": "div",
+                "name": "icon-container",
+                "styles": {
+                  "width": 48,
+                  "height": 48,
+                  "borderRadius": 24,
+                  "backgroundColor": "#667eea",
+                  "alignItems": "center",
+                  "justifyContent": "center"
+                }
+              },
+              {
+                "type": "h3",
+                "name": "feature-title",
+                "text": "Fast & Efficient",
+                "styles": {
+                  "fontSize": 18,
+                  "fontWeight": "600",
+                  "color": "#2d3748"
+                }
+              },
+              {
+                "type": "p",
+                "name": "feature-description",
+                "text": "Convert your web designs to Figma in seconds",
+                "styles": {
+                  "fontSize": 14,
+                  "color": "#718096",
+                  "lineHeight": 20
+                }
+              }
+            ]
+          },
+          {
+            "type": "article",
+            "name": "feature-card-2",
+            "styles": {
+              "width": 240,
+              "backgroundColor": "#ffffff",
+              "padding": 24,
+              "borderRadius": 12,
+              "borderWidth": 1,
+              "borderColor": "#e2e8f0",
+              "gap": 12
+            },
+            "children": [
+              {
+                "type": "div",
+                "name": "icon-container",
+                "styles": {
+                  "width": 48,
+                  "height": 48,
+                  "borderRadius": 24,
+                  "backgroundColor": "#48bb78",
+                  "alignItems": "center",
+                  "justifyContent": "center"
+                }
+              },
+              {
+                "type": "h3",
+                "name": "feature-title",
+                "text": "Pixel Perfect",
+                "styles": {
+                  "fontSize": 18,
+                  "fontWeight": "600",
+                  "color": "#2d3748"
+                }
+              },
+              {
+                "type": "p",
+                "name": "feature-description",
+                "text": "Maintains exact spacing, colors, and typography",
+                "styles": {
+                  "fontSize": 14,
+                  "color": "#718096",
+                  "lineHeight": 20
+                }
+              }
+            ]
+          },
+          {
+            "type": "article",
+            "name": "feature-card-3",
+            "styles": {
+              "width": 240,
+              "backgroundColor": "#ffffff",
+              "padding": 24,
+              "borderRadius": 12,
+              "borderWidth": 1,
+              "borderColor": "#e2e8f0",
+              "gap": 12
+            },
+            "children": [
+              {
+                "type": "div",
+                "name": "icon-container",
+                "styles": {
+                  "width": 48,
+                  "height": 48,
+                  "borderRadius": 24,
+                  "backgroundColor": "#ed8936",
+                  "alignItems": "center",
+                  "justifyContent": "center"
+                }
+              },
+              {
+                "type": "h3",
+                "name": "feature-title",
+                "text": "Easy to Use",
+                "styles": {
+                  "fontSize": 18,
+                  "fontWeight": "600",
+                  "color": "#2d3748"
+                }
+              },
+              {
+                "type": "p",
+                "name": "feature-description",
+                "text": "Simple JSON format, no complex setup required",
+                "styles": {
+                  "fontSize": 14,
+                  "color": "#718096",
+                  "lineHeight": 20
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "div",
+        "name": "cta-container",
+        "styles": {
+          "flexDirection": "row",
+          "gap": 16,
+          "marginTop": 32,
+          "alignItems": "center",
+          "justifyContent": "center"
+        },
+        "children": [
+          {
+            "type": "button",
+            "name": "primary-cta",
+            "styles": {
+              "backgroundColor": "#667eea",
+              "paddingVertical": 16,
+              "paddingHorizontal": 32,
+              "borderRadius": 8,
+              "alignItems": "center",
+              "shadowColor": "#667eea",
+              "shadowOffset": { "width": 0, "height": 4 },
+              "shadowOpacity": 0.3,
+              "shadowRadius": 8
+            },
+            "children": [
+              {
+                "type": "span",
+                "name": "button-text",
+                "text": "Get Started",
+                "styles": {
+                  "color": "#ffffff",
+                  "fontSize": 16,
+                  "fontWeight": "600",
+                  "letterSpacing": 0.5
+                }
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "secondary-cta",
+            "styles": {
+              "backgroundColor": "transparent",
+              "paddingVertical": 16,
+              "paddingHorizontal": 32,
+              "borderRadius": 8,
+              "borderWidth": 2,
+              "borderColor": "#667eea",
+              "alignItems": "center"
+            },
+            "children": [
+              {
+                "type": "span",
+                "name": "button-text",
+                "text": "Learn More",
+                "styles": {
+                  "color": "#667eea",
+                  "fontSize": 16,
+                  "fontWeight": "600",
+                  "letterSpacing": 0.5
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "div",
+        "name": "divider",
+        "styles": {
+          "height": 1,
+          "backgroundColor": "#e2e8f0",
+          "marginVertical": 32
+        }
+      },
+      {
+        "type": "footer",
+        "name": "stats-section",
+        "styles": {
+          "flexDirection": "row",
+          "gap": 48,
+          "justifyContent": "center",
+          "alignItems": "center"
+        },
+        "children": [
+          {
+            "type": "div",
+            "name": "stat-1",
+            "styles": {
+              "alignItems": "center",
+              "gap": 4
+            },
+            "children": [
+              {
+                "type": "h2",
+                "name": "stat-number",
+                "text": "10,000+",
+                "styles": {
+                  "fontSize": 32,
+                  "fontWeight": "700",
+                  "color": "#667eea"
+                }
+              },
+              {
+                "type": "p",
+                "name": "stat-label",
+                "text": "Components Created",
+                "styles": {
+                  "fontSize": 14,
+                  "color": "#718096"
+                }
+              }
+            ]
+          },
+          {
+            "type": "div",
+            "name": "stat-2",
+            "styles": {
+              "alignItems": "center",
+              "gap": 4
+            },
+            "children": [
+              {
+                "type": "h2",
+                "name": "stat-number",
+                "text": "5,000+",
+                "styles": {
+                  "fontSize": 32,
+                  "fontWeight": "700",
+                  "color": "#48bb78"
+                }
+              },
+              {
+                "type": "p",
+                "name": "stat-label",
+                "text": "Happy Designers",
+                "styles": {
+                  "fontSize": 14,
+                  "color": "#718096"
+                }
+              }
+            ]
+          },
+          {
+            "type": "div",
+            "name": "stat-3",
+            "styles": {
+              "alignItems": "center",
+              "gap": 4
+            },
+            "children": [
+              {
+                "type": "h2",
+                "name": "stat-number",
+                "text": "99.9%",
+                "styles": {
+                  "fontSize": 32,
+                  "fontWeight": "700",
+                  "color": "#ed8936"
+                }
+              },
+              {
+                "type": "p",
+                "name": "stat-label",
+                "text": "Accuracy Rate",
+                "styles": {
+                  "fontSize": 14,
+                  "color": "#718096"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "metadata": {
+    "appName": "Modern Landing Page",
+    "framework": "Web (HTML/CSS)",
+    "version": "1.0",
+    "date": "2024-01-15"
+  }
+}
