@@ -1,0 +1,13 @@
+{
+  "name": "code-to-figma",
+  "version": "1.0.0",
+  "description": "Figma plugin to import code into Figma designs",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch"
+  },
+  "devDependencies": {
+    "@figma/plugin-typings": "^1.98.0",
+    "typescript": "^5.9.2"
+  }
+}

@@ -1,0 +1,239 @@
+{
+  "component": {
+    "type": "SafeAreaView",
+    "name": "ProfileScreen",
+    "styles": {
+      "flex": 1,
+      "backgroundColor": "#F5F5F5"
+    },
+    "children": [
+      {
+        "type": "ScrollView",
+        "name": "ScrollContainer",
+        "styles": {
+          "flex": 1
+        },
+        "children": [
+          {
+            "type": "View",
+            "name": "Header",
+            "styles": {
+              "backgroundColor": "#667eea",
+              "padding": 24,
+              "alignItems": "center"
+            },
+            "children": [
+              {
+                "type": "Image",
+                "name": "Avatar",
+                "source": "https://i.pravatar.cc/100",
+                "styles": {
+                  "width": 100,
+                  "height": 100,
+                  "borderRadius": 50,
+                  "borderWidth": 4,
+                  "borderColor": "#FFFFFF",
+                  "marginBottom": 16
+                }
+              },
+              {
+                "type": "Text",
+                "name": "UserName",
+                "text": "John Doe",
+                "styles": {
+                  "fontSize": 24,
+                  "fontWeight": "700",
+                  "color": "#FFFFFF",
+                  "marginBottom": 4
+                }
+              },
+              {
+                "type": "Text",
+                "name": "UserBio",
+                "text": "React Native Developer",
+                "styles": {
+                  "fontSize": 16,
+                  "fontWeight": "400",
+                  "color": "#FFFFFF",
+                  "opacity": 0.9
+                }
+              }
+            ]
+          },
+          {
+            "type": "View",
+            "name": "Stats",
+            "styles": {
+              "flexDirection": "row",
+              "backgroundColor": "#FFFFFF",
+              "padding": 20,
+              "marginTop": -20,
+              "marginHorizontal": 16,
+              "borderRadius": 12,
+              "shadowColor": "#000000",
+              "shadowOffset": { "width": 0, "height": 2 },
+              "shadowOpacity": 0.1,
+              "shadowRadius": 8
+            },
+            "children": [
+              {
+                "type": "View",
+                "name": "StatItem1",
+                "styles": {
+                  "flex": 1,
+                  "alignItems": "center"
+                },
+                "children": [
+                  {
+                    "type": "Text",
+                    "name": "StatValue1",
+                    "text": "1.2K",
+                    "styles": {
+                      "fontSize": 20,
+                      "fontWeight": "700",
+                      "color": "#000000"
+                    }
+                  },
+                  {
+                    "type": "Text",
+                    "name": "StatLabel1",
+                    "text": "Followers",
+                    "styles": {
+                      "fontSize": 14,
+                      "color": "#666666",
+                      "marginTop": 4
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "View",
+                "name": "StatItem2",
+                "styles": {
+                  "flex": 1,
+                  "alignItems": "center"
+                },
+                "children": [
+                  {
+                    "type": "Text",
+                    "name": "StatValue2",
+                    "text": "456",
+                    "styles": {
+                      "fontSize": 20,
+                      "fontWeight": "700",
+                      "color": "#000000"
+                    }
+                  },
+                  {
+                    "type": "Text",
+                    "name": "StatLabel2",
+                    "text": "Following",
+                    "styles": {
+                      "fontSize": 14,
+                      "color": "#666666",
+                      "marginTop": 4
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "View",
+                "name": "StatItem3",
+                "styles": {
+                  "flex": 1,
+                  "alignItems": "center"
+                },
+                "children": [
+                  {
+                    "type": "Text",
+                    "name": "StatValue3",
+                    "text": "89",
+                    "styles": {
+                      "fontSize": 20,
+                      "fontWeight": "700",
+                      "color": "#000000"
+                    }
+                  },
+                  {
+                    "type": "Text",
+                    "name": "StatLabel3",
+                    "text": "Posts",
+                    "styles": {
+                      "fontSize": 14,
+                      "color": "#666666",
+                      "marginTop": 4
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "View",
+            "name": "ActionButtons",
+            "styles": {
+              "flexDirection": "row",
+              "gap": 12,
+              "padding": 16
+            },
+            "children": [
+              {
+                "type": "Pressable",
+                "name": "EditButton",
+                "styles": {
+                  "flex": 1,
+                  "backgroundColor": "#667eea",
+                  "paddingVertical": 14,
+                  "borderRadius": 10,
+                  "alignItems": "center"
+                },
+                "children": [
+                  {
+                    "type": "Text",
+                    "name": "EditButtonText",
+                    "text": "Edit Profile",
+                    "styles": {
+                      "color": "#FFFFFF",
+                      "fontSize": 16,
+                      "fontWeight": "600"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "Pressable",
+                "name": "ShareButton",
+                "styles": {
+                  "flex": 1,
+                  "backgroundColor": "#FFFFFF",
+                  "paddingVertical": 14,
+                  "borderRadius": 10,
+                  "alignItems": "center",
+                  "borderWidth": 2,
+                  "borderColor": "#667eea"
+                },
+                "children": [
+                  {
+                    "type": "Text",
+                    "name": "ShareButtonText",
+                    "text": "Share",
+                    "styles": {
+                      "color": "#667eea",
+                      "fontSize": 16,
+                      "fontWeight": "600"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "metadata": {
+    "appName": "SocialApp",
+    "framework": "React Native",
+    "version": "0.73"
+  }
+}

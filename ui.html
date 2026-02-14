@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Code to Figma</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      margin: 0;
+      padding: 24px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 13px;
+      color: #1a1a1a;
+      background: #ffffff;
+    }
+    
+    h1 {
+      font-size: 18px;
+      font-weight: 600;
+      margin: 0 0 8px 0;
+      color: #000;
+    }
+    
+    .subtitle {
+      font-size: 12px;
+      color: #666;
+      margin: 0 0 20px 0;
+    }
+    
+    .hero {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 24px;
+      color: white;
+    }
+    
+    .hero h2 {
+      font-size: 16px;
+      font-weight: 600;
+      margin: 0 0 8px 0;
+    }
+    
+    .hero p {
+      font-size: 12px;
+      margin: 0;
+      opacity: 0.9;
+      line-height: 1.5;
+    }
+    
+    .features {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    
+    .feature {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 11px;
+    }
+    
+    .feature-icon {
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+    
+    .feature-text {
+      color: #333;
+      font-weight: 500;
+    }
+    
+    .instructions {
+      background: #f0f7ff;
+      border-left: 3px solid #3b82f6;
+      padding: 16px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+    }
+    
+    .instructions h3 {
+      font-size: 13px;
+      font-weight: 600;
+      margin: 0 0 12px 0;
+      color: #1e40af;
+    }
+    
+    .step {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 12px;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    
+    .step:last-child {
+      margin-bottom: 0;
+    }
+    
+    .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      background: #3b82f6;
+      color: white;
+      border-radius: 50%;
+      font-weight: 600;
+      font-size: 11px;
+      margin-right: 10px;
+      flex-shrink: 0;
+    }
+    
+    .step-text {
+      color: #334155;
+      padding-top: 2px;
+    }
+    
+    .code-block {
+      background: #1e293b;
+      color: #e2e8f0;
+      border-radius: 6px;
+      padding: 10px 12px;
+      font-family: 'SF Mono', 'Monaco', 'Menlo', monospace;
+      font-size: 11px;
+      margin: 8px 0 16px 0;
+      overflow-x: auto;
+    }
+    
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      margin-bottom: 8px;
+      color: #374151;
+    }
+    
+    select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 12px;
+      background: white;
+      cursor: pointer;
+      transition: border-color 0.2s;
+      margin-bottom: 16px;
+    }
+    
+    select:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    
+    input[type="number"] {
+      font-family: inherit;
+    }
+    
+    input[type="number"]:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    
+    textarea {
+      width: 100%;
+      min-height: 160px;
+      padding: 12px;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      font-family: 'SF Mono', 'Monaco', 'Menlo', monospace;
+      font-size: 11px;
+      resize: vertical;
+      transition: border-color 0.2s;
+      line-height: 1.5;
+    }
+    
+    textarea:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    
+    textarea::placeholder {
+      color: #9ca3af;
+    }
+    
+    .buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    
+    button {
+      flex: 1;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    
+    button.primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+    }
+    
+    button.primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+    
+    button.primary:active {
+      transform: translateY(0);
+    }
+    
+    button.secondary {
+      background: #f3f4f6;
+      color: #374151;
+    }
+    
+    button.secondary:hover {
+      background: #e5e7eb;
+    }
+    
+    .footer {
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid #e5e7eb;
+      text-align: center;
+      font-size: 11px;
+      color: #6b7280;
+    }
+    
+    .footer a {
+      color: #3b82f6;
+      text-decoration: none;
+    }
+    
+    .footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎨 Code to Figma</h1>
+  <p class="subtitle">Import your code components into Figma designs</p>
+  
+  <div class="hero">
+    <h2>✨ Reverse-Engineer Your App</h2>
+    <p>Convert existing code into editable Figma designs. Perfect for documentation, design handoff, and creating specs from implementation.</p>
+  </div>
+  
+  <div class="features">
+    <div class="feature">
+      <div class="feature-icon">📦</div>
+      <div class="feature-text">All RN Components</div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🎨</div>
+      <div class="feature-text">Complete Styling</div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🔤</div>
+      <div class="feature-text">Smart Fonts</div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🖼️</div>
+      <div class="feature-text">SVG Icons</div>
+    </div>
+  </div>
+  
+  <div class="instructions">
+    <h3>Quick Start</h3>
+    <div class="step">
+      <span class="step-number">1</span>
+      <span class="step-text">Extract your component data using your extraction script</span>
+    </div>
+    <div class="step">
+      <span class="step-number">2</span>
+      <span class="step-text">Copy the generated JSON output</span>
+    </div>
+    <div class="step">
+      <span class="step-number">3</span>
+      <span class="step-text">Paste below and click Import</span>
+    </div>
+  </div>
+  
+  <label for="deviceSelect">📱 Target Device</label>
+  <select id="deviceSelect">
+    <option value="375,812">iPhone 13/14/15 (375 × 812)</option>
+    <option value="390,844">iPhone 13 Pro/14 Pro/15 Pro (390 × 844)</option>
+    <option value="393,852">iPhone 15 Plus (393 × 852)</option>
+    <option value="430,932" selected>iPhone 14/15 Pro Max (430 × 932)</option>
+    <option value="428,926">iPhone 12/13 Pro Max (428 × 926)</option>
+    <option value="414,896">iPhone 11 Pro Max/XS Max (414 × 896)</option>
+    <option value="360,800">Android Medium (360 × 800)</option>
+    <option value="412,915">Android Large (412 × 915)</option>
+    <option value="custom">Custom Size</option>
+  </select>
+  
+  <div id="customSizeContainer" style="display: none; margin-top: 12px;">
+    <div style="display: flex; gap: 12px;">
+      <div style="flex: 1;">
+        <label for="customWidth" style="font-size: 11px;">Width</label>
+        <input type="number" id="customWidth" placeholder="390" style="width: 100%; padding: 8px; border: 2px solid #e5e7eb; border-radius: 6px; font-size: 12px;">
+      </div>
+      <div style="flex: 1;">
+        <label for="customHeight" style="font-size: 11px;">Height</label>
+        <input type="number" id="customHeight" placeholder="844" style="width: 100%; padding: 8px; border: 2px solid #e5e7eb; border-radius: 6px; font-size: 12px;">
+      </div>
+    </div>
+  </div>
+  
+  <label for="jsonInput" style="margin-top: 16px;">📋 Component JSON Data</label>
+  <textarea id="jsonInput" placeholder='{
+  "component": {
+    "type": "View",
+    "name": "MyComponent",
+    "styles": { ... },
+    "children": [ ... ]
+  },
+  "metadata": {
+    "appName": "MyApp",
+    "framework": "React Native"
+  }
+}'></textarea>
+  
+  <div class="buttons">
+    <button class="secondary" id="cancel">Cancel</button>
+    <button class="primary" id="create">🚀 Import to Figma</button>
+  </div>
+  
+  <div class="footer">
+    Made with ❤️ for developers & designers •
+    <a href="https://github.com" target="_blank">Documentation</a>
+  </div>
+  
+  <script>
+    const jsonInput = document.getElementById('jsonInput');
+    const createButton = document.getElementById('create');
+    const cancelButton = document.getElementById('cancel');
+    const deviceSelect = document.getElementById('deviceSelect');
+    const customSizeContainer = document.getElementById('customSizeContainer');
+    const customWidth = document.getElementById('customWidth');
+    const customHeight = document.getElementById('customHeight');
+    
+    // Handle device selection
+    deviceSelect.addEventListener('change', () => {
+      if (deviceSelect.value === 'custom') {
+        customSizeContainer.style.display = 'block';
+      } else {
+        customSizeContainer.style.display = 'none';
+      }
+    });
+    
+    createButton.onclick = () => {
+      const value = jsonInput.value.trim();
+      if (!value) {
+        alert('⚠️ Please paste your component JSON data first');
+        return;
+      }
+      
+      try {
+        const data = JSON.parse(value);
+        
+        // Basic validation
+        if (!data.component) {
+          alert('⚠️ Invalid format: missing "component" field');
+          return;
+        }
+        
+        // Get target dimensions
+        let targetWidth, targetHeight;
+        if (deviceSelect.value === 'custom') {
+          targetWidth = parseInt(customWidth.value) || 390;
+          targetHeight = parseInt(customHeight.value) || 844;
+        } else {
+          const [width, height] = deviceSelect.value.split(',').map(Number);
+          targetWidth = width;
+          targetHeight = height;
+        }
+        
+        parent.postMessage({ 
+          pluginMessage: { 
+            type: 'create-design', 
+            data,
+            targetDimensions: {
+              width: targetWidth,
+              height: targetHeight
+            }
+          } 
+        }, '*');
+      } catch (error) {
+        alert('⚠️ Invalid JSON format. Please check your data and try again.\n\n' + error.message);
+      }
+    };
+    
+    cancelButton.onclick = () => {
+      parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*');
+    };
+    
+    // Enable keyboard shortcuts
+    jsonInput.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+        createButton.click();
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+{
+  "component": {
+    "type": "View",
+    "name": "WelcomeCard",
+    "styles": {
+      "backgroundColor": "#FFFFFF",
+      "padding": 24,
+      "borderRadius": 16,
+      "shadowColor": "#000000",
+      "shadowOffset": { "width": 0, "height": 4 },
+      "shadowOpacity": 0.1,
+      "shadowRadius": 12
+    },
+    "children": [
+      {
+        "type": "Text",
+        "name": "Title",
+        "text": "Welcome to React Native",
+        "styles": {
+          "fontSize": 24,
+          "fontWeight": "700",
+          "color": "#000000",
+          "marginBottom": 8
+        }
+      },
+      {
+        "type": "Text",
+        "name": "Subtitle",
+        "text": "Build amazing mobile apps with ease",
+        "styles": {
+          "fontSize": 16,
+          "fontWeight": "400",
+          "color": "#666666",
+          "lineHeight": 24
+        }
+      }
+    ]
+  },
+  "metadata": {
+    "appName": "MyApp",
+    "framework": "React Native",
+    "version": "0.73"
+  }
+}
