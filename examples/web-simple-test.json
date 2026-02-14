@@ -1,0 +1,68 @@
+{
+  "component": {
+    "type": "div",
+    "name": "simple-card",
+    "styles": {
+      "width": 300,
+      "backgroundColor": "#ffffff",
+      "padding": 24,
+      "borderRadius": 12,
+      "shadowColor": "#000000",
+      "shadowOffset": { "width": 0, "height": 4 },
+      "shadowOpacity": 0.15,
+      "shadowRadius": 16
+    },
+    "children": [
+      {
+        "type": "h1",
+        "name": "heading",
+        "text": "Hello from Web!",
+        "styles": {
+          "fontSize": 32,
+          "fontWeight": "700",
+          "color": "#667eea",
+          "marginBottom": 16
+        }
+      },
+      {
+        "type": "p",
+        "name": "description",
+        "text": "This is a web component rendered in Figma. It uses HTML element types (div, h1, p, button) that are automatically converted to Figma elements.",
+        "styles": {
+          "fontSize": 16,
+          "color": "#4a5568",
+          "lineHeight": 24,
+          "marginBottom": 24
+        }
+      },
+      {
+        "type": "button",
+        "name": "cta-button",
+        "styles": {
+          "backgroundColor": "#667eea",
+          "paddingVertical": 14,
+          "paddingHorizontal": 28,
+          "borderRadius": 8,
+          "alignItems": "center"
+        },
+        "children": [
+          {
+            "type": "span",
+            "name": "button-text",
+            "text": "Test Success! ✓",
+            "styles": {
+              "color": "#ffffff",
+              "fontSize": 16,
+              "fontWeight": "600"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "metadata": {
+    "appName": "Simple Web Test",
+    "framework": "Web (HTML/CSS)",
+    "version": "1.0"
+  }
+}

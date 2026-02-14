@@ -8,15 +8,29 @@ Import your existing components into Figma with full fidelity. Perfect for:
 - 🔄 **Reverse Engineering**: Convert code back to visual designs
 - 👥 **Collaboration**: Share implementation details with your team
 
+## 🌐 Supported Frameworks
+
+- **React Native** - Full support for all React Native components
+- **Web (HTML/CSS)** - NEW! Extract and import web pages and components
+
 ## ✨ Features
 
 ### Comprehensive Component Support
+
+**React Native Components:**
 - ✅ **Core Components**: View, Text, Image, ScrollView, FlatList
 - ✅ **Touchables**: Pressable, TouchableOpacity, TouchableHighlight
 - ✅ **Forms**: TextInput, Switch, Slider, Picker
 - ✅ **Indicators**: ActivityIndicator, ProgressBar
 - ✅ **Containers**: SafeAreaView, KeyboardAvoidingView
 - ✅ **Custom**: LinearGradient, Icons (SVG), Modal
+
+**Web HTML Elements:**
+- ✅ **Containers**: div, section, article, header, footer, nav, main, aside
+- ✅ **Text**: span, p, h1-h6, label, a
+- ✅ **Forms**: button, input, textarea, form
+- ✅ **Lists**: ul, ol, li
+- ✅ **Media**: img
 
 ### Full Style Fidelity
 - 🎨 **Colors**: Background, text, tint, opacity
@@ -117,6 +131,72 @@ Run your extraction:
 node scripts/extract-component-for-figma.js
 ```
 
+### Step 1B: Extract Web Page Data (Alternative)
+
+For web pages, use the browser-based extraction tool:
+
+1. **Open the webpage** you want to extract in your browser
+2. **Open Developer Tools** (F12 or Cmd+Option+I)
+3. **Go to the Console tab**
+4. **Copy and paste** the extraction code from `scripts/extract-web-page.js`
+5. **Run the script** - it will prompt you for a CSS selector (e.g., ".hero", "#main-card")
+6. **JSON is automatically copied** to your clipboard!
+
+Alternatively, run the extraction script in your terminal:
+
+```bash
+node scripts/extract-web-page.js
+```
+
+This will display the browser extraction code you can copy into your browser console.
+
+**Quick Example - Web Form:**
+```json
+{
+  "component": {
+    "type": "form",
+    "name": "contact-form",
+    "styles": {
+      "width": 400,
+      "backgroundColor": "#ffffff",
+      "padding": 32,
+      "borderRadius": 12
+    },
+    "children": [
+      {
+        "type": "h2",
+        "name": "form-heading",
+        "text": "Get in Touch",
+        "styles": {
+          "fontSize": 28,
+          "fontWeight": "700",
+          "color": "#1a202c"
+        }
+      },
+      {
+        "type": "input",
+        "name": "email-input",
+        "placeholder": "Enter your email",
+        "styles": {
+          "width": 336,
+          "height": 44,
+          "borderWidth": 1,
+          "borderColor": "#e2e8f0",
+          "borderRadius": 8
+        }
+      }
+    ]
+  },
+  "metadata": {
+    "appName": "Contact Form",
+    "framework": "Web (HTML/CSS)",
+    "version": "1.0"
+  }
+}
+```
+
+See `examples/web-landing-page.json` and `examples/web-contact-form.json` for complete web examples!
+
 ### Step 2: Import to Figma
 
 1. Open Figma Desktop
@@ -134,10 +214,12 @@ The plugin expects JSON in this format:
 ```typescript
 {
   "component": {
-    "type": "View" | "Text" | "Image" | "ScrollView" | ...,
+    // React Native types: View, Text, Image, ScrollView, Pressable, etc.
+    // Web types: div, span, p, h1-h6, button, input, section, etc.
+    "type": "View" | "div" | "Text" | "span" | "Image" | "img" | ...,
     "name": "ComponentName",
     "styles": {
-      // All React Native StyleSheet properties
+      // All React Native StyleSheet properties or CSS properties
       backgroundColor?: string,
       padding?: number,
       fontSize?: number,
@@ -145,14 +227,14 @@ The plugin expects JSON in this format:
     },
     "children": [ /* nested components */ ],
     // Component-specific props
-    "text"?: string,         // for Text
-    "source"?: string,       // for Image
+    "text"?: string,         // for Text, p, h1-h6, span
+    "source"?: string,       // for Image, img
     "svgData"?: string,      // for Icons
-    "placeholder"?: string,  // for TextInput
+    "placeholder"?: string,  // for TextInput, input, textarea
   },
   "metadata": {
     "appName": "MyApp",
-    "framework": "React Native",
+    "framework": "React Native" | "Web (HTML/CSS)",
     "version": "0.73"
   }
 }
@@ -301,12 +383,18 @@ const svgData = fs.readFileSync('./assets/icon.svg', 'utf-8');
 ## 📚 Examples
 
 See `/examples` folder for:
+
+**React Native:**
 - ✅ Simple component extraction
 - ✅ Complex screen with navigation
 - ✅ Form with inputs and validation
 - ✅ List with FlatList
 - ✅ Card component with images
 - ✅ Gradient backgrounds
+
+**Web:**
+- ✅ Modern landing page (`web-landing-page.json`)
+- ✅ Contact form with inputs (`web-contact-form.json`)
 
 ## 🔮 Roadmap
 

@@ -1,6 +1,6 @@
 {
   "name": "Code to Figma",
-  "id": "code-to-figma",
+  "id": "1604523528373877558",
   "api": "1.0.0",
   "main": "code.js",
   "ui": "ui.html",
@@ -9,5 +9,6 @@
   "enableProposedApi": false,
   "networkAccess": {
     "allowedDomains": ["none"]
-  }
+  },
+  "documentAccess": "dynamic-page"
 }

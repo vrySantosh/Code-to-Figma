@@ -1,0 +1,223 @@
+{
+  "component": {
+    "type": "form",
+    "name": "contact-form",
+    "styles": {
+      "width": 400,
+      "backgroundColor": "#ffffff",
+      "padding": 32,
+      "borderRadius": 12,
+      "shadowColor": "#000000",
+      "shadowOffset": { "width": 0, "height": 4 },
+      "shadowOpacity": 0.12,
+      "shadowRadius": 16,
+      "gap": 24
+    },
+    "children": [
+      {
+        "type": "h2",
+        "name": "form-heading",
+        "text": "Get in Touch",
+        "styles": {
+          "fontSize": 28,
+          "fontWeight": "700",
+          "color": "#1a202c",
+          "marginBottom": 8
+        }
+      },
+      {
+        "type": "p",
+        "name": "form-description",
+        "text": "Fill out the form below and we'll get back to you soon.",
+        "styles": {
+          "fontSize": 14,
+          "color": "#718096",
+          "lineHeight": 20,
+          "marginBottom": 16
+        }
+      },
+      {
+        "type": "div",
+        "name": "form-group-name",
+        "styles": {
+          "gap": 8
+        },
+        "children": [
+          {
+            "type": "label",
+            "name": "name-label",
+            "text": "Full Name",
+            "styles": {
+              "fontSize": 14,
+              "fontWeight": "600",
+              "color": "#2d3748"
+            }
+          },
+          {
+            "type": "input",
+            "name": "name-input",
+            "placeholder": "John Doe",
+            "styles": {
+              "width": 336,
+              "height": 44,
+              "backgroundColor": "#f7fafc",
+              "borderWidth": 1,
+              "borderColor": "#e2e8f0",
+              "borderRadius": 8,
+              "paddingHorizontal": 16,
+              "fontSize": 14,
+              "color": "#2d3748"
+            }
+          }
+        ]
+      },
+      {
+        "type": "div",
+        "name": "form-group-email",
+        "styles": {
+          "gap": 8
+        },
+        "children": [
+          {
+            "type": "label",
+            "name": "email-label",
+            "text": "Email Address",
+            "styles": {
+              "fontSize": 14,
+              "fontWeight": "600",
+              "color": "#2d3748"
+            }
+          },
+          {
+            "type": "input",
+            "name": "email-input",
+            "placeholder": "john@example.com",
+            "styles": {
+              "width": 336,
+              "height": 44,
+              "backgroundColor": "#f7fafc",
+              "borderWidth": 1,
+              "borderColor": "#e2e8f0",
+              "borderRadius": 8,
+              "paddingHorizontal": 16,
+              "fontSize": 14,
+              "color": "#2d3748"
+            }
+          }
+        ]
+      },
+      {
+        "type": "div",
+        "name": "form-group-message",
+        "styles": {
+          "gap": 8
+        },
+        "children": [
+          {
+            "type": "label",
+            "name": "message-label",
+            "text": "Message",
+            "styles": {
+              "fontSize": 14,
+              "fontWeight": "600",
+              "color": "#2d3748"
+            }
+          },
+          {
+            "type": "textarea",
+            "name": "message-input",
+            "placeholder": "Tell us about your project...",
+            "styles": {
+              "width": 336,
+              "height": 120,
+              "backgroundColor": "#f7fafc",
+              "borderWidth": 1,
+              "borderColor": "#e2e8f0",
+              "borderRadius": 8,
+              "padding": 16,
+              "fontSize": 14,
+              "color": "#2d3748"
+            }
+          }
+        ]
+      },
+      {
+        "type": "div",
+        "name": "form-actions",
+        "styles": {
+          "flexDirection": "row",
+          "gap": 12,
+          "marginTop": 8
+        },
+        "children": [
+          {
+            "type": "button",
+            "name": "submit-button",
+            "styles": {
+              "flex": 1,
+              "backgroundColor": "#667eea",
+              "paddingVertical": 14,
+              "paddingHorizontal": 24,
+              "borderRadius": 8,
+              "alignItems": "center",
+              "justifyContent": "center"
+            },
+            "children": [
+              {
+                "type": "span",
+                "name": "submit-text",
+                "text": "Send Message",
+                "styles": {
+                  "color": "#ffffff",
+                  "fontSize": 16,
+                  "fontWeight": "600"
+                }
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "cancel-button",
+            "styles": {
+              "backgroundColor": "#f7fafc",
+              "paddingVertical": 14,
+              "paddingHorizontal": 24,
+              "borderRadius": 8,
+              "alignItems": "center",
+              "justifyContent": "center"
+            },
+            "children": [
+              {
+                "type": "span",
+                "name": "cancel-text",
+                "text": "Cancel",
+                "styles": {
+                  "color": "#4a5568",
+                  "fontSize": 16,
+                  "fontWeight": "600"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "name": "privacy-note",
+        "text": "We respect your privacy and will never share your information.",
+        "styles": {
+          "fontSize": 12,
+          "color": "#a0aec0",
+          "textAlign": "center",
+          "marginTop": 8
+        }
+      }
+    ]
+  },
+  "metadata": {
+    "appName": "Contact Form",
+    "framework": "Web (HTML/CSS)",
+    "version": "1.0",
+    "date": "2024-01-15"
+  }
+}

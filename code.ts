@@ -96,7 +96,7 @@ interface StyleData {
 
 interface RNComponentNode {
   type: 
-    // Core Components
+    // Core Components (React Native)
     | 'View' 
     | 'Text' 
     | 'TextInput'
@@ -104,25 +104,52 @@ interface RNComponentNode {
     | 'ScrollView'
     | 'FlatList'
     | 'SectionList'
-    // Touchables
+    // Touchables (React Native)
     | 'Pressable' 
     | 'TouchableOpacity'
     | 'TouchableHighlight'
     | 'TouchableWithoutFeedback'
-    // Form Controls
+    // Form Controls (React Native)
     | 'Switch'
     | 'Slider'
     | 'Picker'
-    // Indicators
+    // Indicators (React Native)
     | 'ActivityIndicator'
     | 'ProgressBar'
-    // Safe Areas
+    // Safe Areas (React Native)
     | 'SafeAreaView'
     | 'KeyboardAvoidingView'
-    // Custom
+    // Custom (React Native)
     | 'Icon'
     | 'LinearGradient'
-    | 'Modal';
+    | 'Modal'
+    // Web HTML Elements
+    | 'div'
+    | 'span'
+    | 'p'
+    | 'h1'
+    | 'h2'
+    | 'h3'
+    | 'h4'
+    | 'h5'
+    | 'h6'
+    | 'button'
+    | 'a'
+    | 'section'
+    | 'article'
+    | 'header'
+    | 'footer'
+    | 'nav'
+    | 'main'
+    | 'aside'
+    | 'input'
+    | 'textarea'
+    | 'label'
+    | 'form'
+    | 'img'
+    | 'ul'
+    | 'ol'
+    | 'li';
   
   styles: StyleData;
   children?: RNComponentNode[];
@@ -793,40 +820,69 @@ async function createFrameNode(node: RNComponentNode, data: DesignData, context?
   return frame;
 }
 
+/** Normalize web HTML elements to React Native equivalents for processing */
+function normalizeWebElement(type: RNComponentNode['type']): RNComponentNode['type'] {
+  // Web text elements → Text
+  if (['span', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'label', 'a'].includes(type)) {
+    return 'Text';
+  }
+  // Web button → Pressable
+  if (type === 'button') {
+    return 'Pressable';
+  }
+  // Web input → TextInput
+  if (type === 'input' || type === 'textarea') {
+    return 'TextInput';
+  }
+  // Web image → Image
+  if (type === 'img') {
+    return 'Image';
+  }
+  // Web containers → View
+  if (['div', 'section', 'article', 'header', 'footer', 'nav', 'main', 'aside', 'form', 'ul', 'ol', 'li'].includes(type)) {
+    return 'View';
+  }
+  // Return original if not a web element
+  return type;
+}
+
 /** Main router to create appropriate Figma node */
 async function createFigmaNode(node: RNComponentNode, data: DesignData, context?: ProcessingContext): Promise<SceneNode> {
   const scaleFactor = context?.scaleFactor || 1;
   const scaledStyles = scaleStyles(node.styles, scaleFactor);
+  
+  // Normalize web elements to React Native equivalents
+  const normalizedType = normalizeWebElement(node.type);
 
   // Handle Icon type
-  if (node.type === 'Icon' && node.svgData) {
+  if (normalizedType === 'Icon' && node.svgData) {
     const width = typeof scaledStyles.width === 'number' ? scaledStyles.width : Math.round(24 * scaleFactor);
     const height = typeof scaledStyles.height === 'number' ? scaledStyles.height : Math.round(24 * scaleFactor);
     return await createSvgNode(node.svgData, node.name, width, height);
   }
 
   // Handle Image
-  if (node.type === 'Image') {
+  if (normalizedType === 'Image') {
     return await createImageNode(node, context);
   }
 
   // Handle LinearGradient
-  if (node.type === 'LinearGradient') {
+  if (normalizedType === 'LinearGradient') {
     return createGradientNode(node, context);
   }
 
   // Handle TextInput
-  if (node.type === 'TextInput') {
+  if (normalizedType === 'TextInput') {
     return await createTextInputNode(node, context);
   }
   
   // Handle Text
-  if (node.type === 'Text') {
+  if (normalizedType === 'Text') {
     return await createTextNode(node, context);
   }
 
   // Handle ActivityIndicator
-  if (node.type === 'ActivityIndicator') {
+  if (normalizedType === 'ActivityIndicator') {
     const frame = figma.createFrame();
     frame.name = node.name;
     const size = Math.round(40 * scaleFactor);
@@ -848,7 +904,7 @@ async function createFigmaNode(node: RNComponentNode, data: DesignData, context?
   }
 
   // Handle FlatList / ScrollView
-  if (node.type === 'FlatList' || node.type === 'ScrollView') {
+  if (normalizedType === 'FlatList' || normalizedType === 'ScrollView') {
     const frame = await createFrameNode(node, data, context);
     frame.name = `${node.type} - ${node.name}`;
     
