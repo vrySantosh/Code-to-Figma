@@ -53,7 +53,6 @@ This is the ONLY plugin that lets you:
 1. Clone this repository
 2. Install dependencies:
    ```bash
-   cd figma-plugin
    npm install
    ```
 3. Build the plugin:
