@@ -33,7 +33,7 @@
     }
     
     .hero {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #0D99FF 0%, #0066CC 100%);
       border-radius: 12px;
       padding: 20px;
       margin-bottom: 24px;
@@ -201,6 +201,12 @@
       margin-top: 20px;
     }
     
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    
     button {
       flex: 1;
       padding: 12px 20px;
@@ -214,18 +220,40 @@
     }
     
     button.primary {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #0D99FF 0%, #0066CC 100%);
       color: white;
-      box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+      box-shadow: 0 2px 8px rgba(13, 153, 255, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
     }
     
     button.primary:hover {
       transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+      box-shadow: 0 4px 12px rgba(13, 153, 255, 0.4);
     }
     
     button.primary:active {
       transform: translateY(0);
+    }
+    
+    button.primary:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    button.primary.loading::after {
+      content: '';
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      margin-left: 8px;
+      border: 2px solid #ffffff;
+      border-radius: 50%;
+      border-top-color: transparent;
+      animation: spin 0.8s linear infinite;
     }
     
     button.secondary {
@@ -294,22 +322,22 @@
     }
     
     #vscode-status.connected {
-      background: #d4edda;
-      color: #155724;
-      border-color: #28a745;
-      box-shadow: 0 2px 8px rgba(40, 167, 69, 0.2);
+      background: #E8F5E9;
+      color: #2E7D32;
+      border-color: #4CAF50;
+      box-shadow: 0 2px 8px rgba(76, 175, 80, 0.2);
     }
     
     #vscode-status.disconnected {
-      background: #f8d7da;
-      color: #721c24;
-      border-color: #dc3545;
+      background: #FFEBEE;
+      color: #C62828;
+      border-color: #EF5350;
     }
     
     #vscode-status.connecting {
-      background: #fff3cd;
-      color: #856404;
-      border-color: #ffc107;
+      background: #FFF3E0;
+      color: #E65100;
+      border-color: #FF9800;
       animation: pulse 1.5s ease-in-out infinite;
     }
     
@@ -352,8 +380,59 @@
     }
     
     @keyframes spin {
-      from { transform: rotate(0deg); }
       to { transform: rotate(360deg); }
+    }
+    
+    #error-banner {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #FFEBEE;
+      color: #C62828;
+      border: 2px solid #EF5350;
+      border-radius: 8px;
+      padding: 12px 40px 12px 16px;
+      box-shadow: 0 4px 12px rgba(198, 40, 40, 0.2);
+      z-index: 1000;
+      max-width: 90%;
+      font-size: 12px;
+      font-weight: 500;
+      display: none;
+      animation: slideDown 0.3s ease-out;
+    }
+    
+    #error-banner.show {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    #error-banner .close-btn {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #C62828;
+      font-size: 18px;
+      cursor: pointer;
+      padding: 0;
+      width: 20px;
+      height: 20px;
+      line-height: 1;
+    }
+    
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
     }
     
     #vscode-status .status-icon {
@@ -390,6 +469,15 @@
   </svg>
 </head>
 <body>
+  <div id="error-banner">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="flex-shrink: 0;">
+      <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+      <path d="M12 8V12M12 16H12.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <span id="error-message"></span>
+    <button class="close-btn" onclick="document.getElementById('error-banner').classList.remove('show')">×</button>
+  </div>
+  
   <h1>Code to Figma</h1>
   <p class="subtitle">Transform your codebase into editable Figma designs instantly</p>
   <div id="vscode-status" class="connecting">
@@ -439,24 +527,6 @@
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
           <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-      </div>>
-      <div class="feature-text">Smart Font Loading</div>
-    </div>
-    <div class="feature">
-      <div class="feature-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-          <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/>
-          <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"/>
-          <path d="M21 15L16 10L5 21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </div>
-      <div class="feature-text">SVG Icons & Images</div>
-    </div>
-    <div class="feature">
-      <div class="feature-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-          <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
       </div>
       <div class="feature-text">Auto-Layout Ready</div>
     </div>
@@ -473,12 +543,6 @@
       <span class="step-text"><strong>Copy JSON Output:</strong> The extractor will output a JSON object containing your component tree, styles, and metadata.</span>
     </div>
     <div class="step">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="display: inline-block; vertical-align: middle; margin-right: 4px;">
-      <rect x="5" y="2" width="14" height="20" rx="2" stroke="currentColor" stroke-width="2"/>
-      <path d="M12 18H12.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-    </svg>
-    Target Device / Canvas Size
-  
       <span class="step-number">3</span>
       <span class="step-text"><strong>Select Target Device:</strong> Choose your target device dimensions or use custom sizes for web pages.</span>
     </div>
@@ -561,29 +625,11 @@
       <li>Supports Web HTML elements (div, span, button, input, img, etc.)</li>
       <li>All text layers are editable, images are imported, SVG icons are vectorized</li>
       <li>Flexbox layouts automatically convert to Figma Auto-layout</li>
-      <li>Use Cmd/Ctrl+Enter to quickly 
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="display: inline-block; vertical-align: middle; margin-right: 6px;">
-        <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-      Import to Figma
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="#dc3545" style="display: inline-block; vertical-align: middle; margin: 0 2px;">
-      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-    </svg>
-   
-    ng JSON</li>
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="display: inline-block; vertical-align: middle; margin-right: 6px;">
-        <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-      Import to Figma
-    </button>
+      <li>Use <strong>Cmd/Ctrl+Enter</strong> to quickly import JSON</li>
+    </ul>
   </div>
-  
-  <div class="footer">
-    <strong>Code to Figma</strong> v1.2 • Made with
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="#dc3545" style="display: inline-block; vertical-align: middle; margin: 0 2px;">
-      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-    </svg>
-   
+
+  <div class="actions">
     <button class="secondary" id="cancel">Cancel</button>
     <button class="primary" id="create">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="display: inline-block; vertical-align: middle; margin-right: 6px;">
@@ -634,7 +680,7 @@
       
       // Validate that JSON data is provided
       if (!value) {
-        alert('⚠️ Please paste your component JSON data first.\n\nNeed help? Check the documentation for extraction script examples.');
+        showError('⚠️ Please paste your component JSON data first. Need help? Check the documentation for extraction script examples.');
         return;
       }
       
@@ -643,21 +689,19 @@
         const data = JSON.parse(value);
         
         // Validate required JSON structure
-        // Basic validation
         if (!data.component) {
-          alert('⚠️ Invalid JSON Format\n\nYour JSON must include a "component" field with the component tree.\n\nExample:\n{\n  "component": { ... },\n  "metadata": { ... }\n}');
+          showError('⚠️ Invalid JSON Format: Your JSON must include a "component" field with the component tree.');
           return;
         }
         
         if (!data.component.type) {
-          alert('⚠️ Invalid Component\n\nThe component must have a "type" field (e.g., "View", "div", etc.).');
+          showError('⚠️ Invalid Component: The component must have a "type" field (e.g., "View", "div", etc.).');
           return;
         }
         
         // Get target canvas dimensions
         let targetWidth, targetHeight;
         if (deviceSelect.value === 'custom') {
-          // Use custom dimensions or fallback to defaults
           targetWidth = parseInt(customWidth.value) || 390;
           targetHeight = parseInt(customHeight.value) || 844;
         } else {
@@ -666,6 +710,13 @@
           targetHeight = height;
         }
         
+        // Show loading state
+        createButton.disabled = true;
+        createButton.classList.add('loading');
+        const originalText = createButton.innerHTML;
+        createButton.innerHTML = '⏳ Importing...';
+        
+        // Send to Figma plugin
         parent.postMessage({ 
           pluginMessage: { 
             type: 'create-design', 
@@ -676,8 +727,16 @@
             }
           } 
         }, '*');
+        
+        // Reset loading state after a delay (Figma will close the plugin when done)
+        setTimeout(() => {
+          createButton.disabled = false;
+          createButton.classList.remove('loading');
+          createButton.innerHTML = originalText;
+        }, 3000);
+        
       } catch (error) {
-        alert('⚠️ Invalid JSON format. Please check your data and try again.\n\n' + error.message);
+        showError('⚠️ Invalid JSON format: ' + error.message);
       }
     };
     
@@ -695,15 +754,47 @@
     // Initialize VS Code bridge connection
     let vscodeWs = null;
     let vscodeConnected = false;
+    let connectionRetries = 0;
+    const MAX_RETRIES = 3;
+    const CONNECTION_TIMEOUT = 10000; // 10 seconds
+    let connectionTimeoutId = null;
+    let reconnectTimeoutId = null;
     
     function connectToVSCodeBridge() {
+      // Clear any existing timeouts
+      if (connectionTimeoutId) clearTimeout(connectionTimeoutId);
+      if (reconnectTimeoutId) clearTimeout(reconnectTimeoutId);
+      
+      // Close existing connection if any
+      if (vscodeWs) {
+        try {
+          vscodeWs.close();
+        } catch (e) {}
+        vscodeWs = null;
+      }
+      
       try {
+        showVSCodeStatus('connecting', `Attempting connection to ws://localhost:3334... (Attempt ${connectionRetries + 1}/${MAX_RETRIES + 1})`);
+        
         vscodeWs = new WebSocket('ws://localhost:3334');
+        let connectionEstablished = false;
+        
+        // Set connection timeout
+        connectionTimeoutId = setTimeout(() => {
+          if (!connectionEstablished && vscodeWs && vscodeWs.readyState !== WebSocket.OPEN) {
+            console.error('Connection timeout after 10 seconds');
+            vscodeWs.close();
+            handleConnectionFailure('Connection timeout. Bridge server not responding on port 3334.');
+          }
+        }, CONNECTION_TIMEOUT);
         
         vscodeWs.onopen = () => {
-          console.log('Connected to VS Code bridge');
+          connectionEstablished = true;
+          clearTimeout(connectionTimeoutId);
+          console.log('Connected to VS Code bridge on ws://localhost:3334');
           vscodeConnected = true;
-          showVSCodeStatus('connected', 'Bridge server ready');
+          connectionRetries = 0; // Reset retry counter on success
+          showVSCodeStatus('connected', 'Connected on port 3334');
         };
         
         vscodeWs.onmessage = (event) => {
@@ -712,24 +803,91 @@
             handleVSCodeMessage(message);
           } catch (error) {
             console.error('Error parsing VS Code message:', error);
+            showError('Invalid message received from VS Code bridge');
           }
         };
         
         vscodeWs.onclose = () => {
+          clearTimeout(connectionTimeoutId);
           console.log('Disconnected from VS Code bridge');
           vscodeConnected = false;
-          showVSCodeStatus('disconnected', 'Will retry in 5 seconds...');
-          // Try to reconnect after 5 seconds
-          setTimeout(connectToVSCodeBridge, 5000);
+          
+          if (!connectionEstablished) {
+            // Connection never established, handle as failure
+            handleConnectionFailure('Failed to connect to bridge server on port 3334.');
+          } else {
+            // Was connected but now disconnected, attempt reconnect
+            showVSCodeStatus('disconnected', 'Connection lost. Attempting to reconnect...');
+            scheduleReconnect();
+          }
         };
         
         vscodeWs.onerror = (error) => {
+          clearTimeout(connectionTimeoutId);
           console.error('VS Code WebSocket error:', error);
-          showVSCodeStatus('disconnected', 'Connection failed. Is bridge server running?');
+          // Error will trigger onclose, so we handle it there
         };
       } catch (error) {
-        console.error('Failed to connect to VS Code bridge:', error);
-        showVSCodeStatus('disconnected', 'Error: ' + error.message);
+        console.error('Failed to create WebSocket connection:', error);
+        handleConnectionFailure('Error: ' + error.message);
+      }
+    }
+    
+    function handleConnectionFailure(message) {
+      connectionRetries++;
+      
+      if (connectionRetries <= MAX_RETRIES) {
+        // Schedule reconnect with exponential backoff: 2s, 4s, 8s
+        const retryDelay = Math.pow(2, connectionRetries) * 1000;
+        showVSCodeStatus('disconnected', `${message}\nRetrying in ${retryDelay / 1000}s... (Attempt ${connectionRetries}/${MAX_RETRIES})`);
+        
+        reconnectTimeoutId = setTimeout(() => {
+          connectToVSCodeBridge();
+        }, retryDelay);
+      } else {
+        // Max retries reached
+        showVSCodeStatus('disconnected', 
+          `${message}\nMax retries (${MAX_RETRIES}) reached.\n\n` +
+          `To start the server:\n` +
+          `1. Open VS Code\n` +
+          `2. Go to Code to Figma sidebar\n` +
+          `3. Click ▶️ Start Server\n\n` +
+          `Or click the button below to try again.`);
+      }
+    }
+    
+    function scheduleReconnect() {
+      // When connection is lost after being established, use shorter delays
+      const retryDelay = 3000; // 3 seconds
+      reconnectTimeoutId = setTimeout(() => {
+        connectionRetries = 0; // Reset for fresh reconnection
+        connectToVSCodeBridge();
+      }, retryDelay);
+    }
+    
+    function manualReconnect() {
+      connectionRetries = 0; // Reset retry counter
+      clearTimeout(reconnectTimeoutId);
+      connectToVSCodeBridge();
+    }
+    
+    function showError(message, duration = 5000) {
+      const errorBanner = document.getElementById('error-banner');
+      const errorMessage = document.getElementById('error-message');
+      
+      if (errorBanner && errorMessage) {
+        errorMessage.textContent = message;
+        errorBanner.classList.add('show');
+        
+        // Auto-dismiss after duration
+        if (duration > 0) {
+          setTimeout(() => {
+            errorBanner.classList.remove('show');
+          }, duration);
+        }
+      } else {
+        // Fallback to console
+        console.error('Error:', message);
       }
     }
     
@@ -770,25 +928,25 @@
         
         if (state === 'connected') {
           iconId = 'icon-check-circle';
-          iconColor = '#28a745';
-          statusHTML = 'VS Code: Connected';
+          iconColor = '#4CAF50';
+          statusHTML = '✅ VS Code: Connected';
           statusElement.className = 'connected';
         } else if (state === 'connecting') {
           iconId = 'icon-spinner';
-          iconColor = '#ffc107';
+          iconColor = '#FF9800';
           iconClass = 'spin';
-          statusHTML = 'VS Code: Connecting...';
+          statusHTML = '⏳ VS Code: Connecting...';
           statusElement.className = 'connecting';
         } else {
           iconId = 'icon-x-circle';
-          iconColor = '#dc3545';
-          statusHTML = 'VS Code: Disconnected';
+          iconColor = '#EF5350';
+          statusHTML = '❌ VS Code: Disconnected';
           statusElement.className = 'disconnected';
-          buttonHtml = `<button class="reconnect-btn" onclick="connectToVSCodeBridge()">
+          buttonHtml = `<button class="reconnect-btn" onclick="manualReconnect()">
             <svg class="status-icon" style="color: currentColor;">
               <use href="#icon-refresh"/>
             </svg>
-            Reconnect Now
+            🔄 Test Connection
           </button>`;
         }
         

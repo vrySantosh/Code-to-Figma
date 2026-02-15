@@ -927,83 +927,185 @@ async function createFigmaNode(node: RNComponentNode, data: DesignData, context?
 }
 
 // ============================================================================
+// ============================================================================
+// MESSAGE VALIDATION
+// ============================================================================
+
+interface MessageWithId {
+  _vscodeMessageId?: string;
+}
+
+interface CreateDesignMessage {
+  type: 'create-design';
+  data: DesignData;
+  targetDimensions?: TargetDimensions;
+}
+
+interface ImportFromVSCodeMessage {
+  type: 'import-from-vscode';
+  data: DesignData;
+}
+
+interface UpdateFromVSCodeMessage {
+  type: 'update-from-vscode';
+  data: DesignData;
+  nodeId: string;
+}
+
+interface GetNodeDataMessage {
+  type: 'get-node-data';
+  nodeId?: string;
+}
+
+interface CancelMessage {
+  type: 'cancel';
+}
+
+type PluginMessage = CreateDesignMessage | ImportFromVSCodeMessage | UpdateFromVSCodeMessage | GetNodeDataMessage | CancelMessage;
+
+function isCreateDesignMessage(msg: any): msg is CreateDesignMessage {
+  return msg && msg.type === 'create-design' && msg.data && typeof msg.data === 'object';
+}
+
+function isImportFromVSCodeMessage(msg: any): msg is ImportFromVSCodeMessage {
+  return msg && msg.type === 'import-from-vscode' && msg.data && typeof msg.data === 'object';
+}
+
+function isUpdateFromVSCodeMessage(msg: any): msg is UpdateFromVSCodeMessage {
+  return msg && msg.type === 'update-from-vscode' && msg.data && typeof msg.data === 'object' && typeof msg.nodeId === 'string';
+}
+
+function isGetNodeDataMessage(msg: any): msg is GetNodeDataMessage {
+  return msg && msg.type === 'get-node-data';
+}
+
+function validateDesignData(data: any): { valid: boolean; error?: string } {
+  if (!data) {
+    return { valid: false, error: 'No data provided' };
+  }
+  
+  if (!data.component) {
+    return { valid: false, error: 'Missing required field: component' };
+  }
+  
+  if (!data.component.type) {
+    return { valid: false, error: 'Component must have a type field' };
+  }
+  
+  return { valid: true };
+}
+
+function handleError(error: unknown, context: string): void {
+  const timestamp = new Date().toISOString();
+  const message = error instanceof Error ? error.message : String(error);
+  
+  console.error(`[${timestamp}] ${context}:`, message);
+  
+  if (error instanceof Error && error.stack) {
+    console.error('Stack trace:', error.stack);
+  }
+  
+  figma.notify(`❌ ${context}: ${message}`, { timeout: 5000 });
+}
+
+// ============================================================================
 // MAIN PLUGIN CODE
 // ============================================================================
 
 figma.showUI(__html__, { width: 540, height: 680, title: 'Code to Figma' });
 
-figma.ui.onmessage = async (msg) => {
-  if (msg.type === 'create-design') {
-    try {
-      const data: DesignData = msg.data;
-      const targetDimensions: TargetDimensions | undefined = msg.targetDimensions;
-      
-      // Pre-load common fonts
-      await figma.loadFontAsync({ family: 'Inter', style: 'Regular' });
-      await figma.loadFontAsync({ family: 'Inter', style: 'Medium' });
-      await figma.loadFontAsync({ family: 'Inter', style: 'Semi Bold' });
-      await figma.loadFontAsync({ family: 'Inter', style: 'Bold' });
-      
-      console.log('🎨 Starting import...');
-      console.log('App:', data.metadata?.appName || 'Unknown');
-      console.log('Framework:', data.metadata?.framework || 'React Native');
-      
-      // Calculate scale factor if target dimensions provided
-      let scaleFactor = 1;
-      if (targetDimensions) {
-        const componentWidth = typeof data.component.styles.width === 'number' 
-          ? data.component.styles.width 
-          : 375;
-        const componentHeight = data.component.styles.height || 844;
-        
-        scaleFactor = calculateScaleFactor(componentWidth, componentHeight, targetDimensions);
-        console.log(`📐 Scaling from ${componentWidth}×${componentHeight} to ${targetDimensions.width}×${targetDimensions.height} (factor: ${scaleFactor.toFixed(2)})`);
-      }
-      
-      // Create context with target dimensions and scale factor
-      const context: ProcessingContext = {
-        targetDimensions,
-        scaleFactor
-      };
-      
-      // Create main frame
-      const mainFrame = await createFigmaNode(data.component, data, context) as FrameNode;
-      
-      // Override dimensions for root frame if target dimensions provided
-      if (targetDimensions) {
-        mainFrame.resize(targetDimensions.width, targetDimensions.height);
-      }
-      
-      const frameName = data.metadata?.appName 
-        ? `${data.metadata.appName} - ${data.component.name}`
-        : `${data.component.name} (React Native)`;
-      mainFrame.name = frameName;
-      
-      // Add to current page
-      figma.currentPage.appendChild(mainFrame);
-      
-      // Center in viewport
-      figma.viewport.scrollAndZoomIntoView([mainFrame]);
-      
-      const componentCount = countComponents(data.component);
-      const deviceInfo = targetDimensions 
-        ? ` (${targetDimensions.width}×${targetDimensions.height})`
-        : '';
-      figma.notify(`✅ Imported ${componentCount} components${deviceInfo} successfully!`);
-      console.log('✅ Import complete!');
-    } catch (error: any) {
-      figma.notify(`❌ Error: ${error?.message || 'Unknown error'}`);
-      console.error('Import error:', error);
+figma.ui.onmessage = async (msg: any & MessageWithId) => {
+  // Extract VS Code message ID for response tracking
+  const vscodeMessageId = msg._vscodeMessageId;
+  
+  try {
+    // Validate message structure
+    if (!msg || !msg.type) {
+      handleError(new Error('Invalid message: missing type field'), 'Message validation');
+      return;
     }
-  }
+    
+    // Handle create-design message
+    if (isCreateDesignMessage(msg)) {
+      const validation = validateDesignData(msg.data);
+      if (!validation.valid) {
+        handleError(new Error(validation.error), 'Data validation');
+        return;
+      }
+      
+      try {
+        const data = msg.data;
+        const targetDimensions = msg.targetDimensions;
+        
+        // Pre-load common fonts
+        await figma.loadFontAsync({ family: 'Inter', style: 'Regular' });
+        await figma.loadFontAsync({ family: 'Inter', style: 'Medium' });
+        await figma.loadFontAsync({ family: 'Inter', style: 'Semi Bold' });
+        await figma.loadFontAsync({ family: 'Inter', style: 'Bold' });
+        
+        console.log('🎨 Starting import...');
+        console.log('App:', data.metadata?.appName || 'Unknown');
+        console.log('Framework:', data.metadata?.framework || 'React Native');
+        
+        // Calculate scale factor if target dimensions provided
+        let scaleFactor = 1;
+        if (targetDimensions) {
+          const componentWidth = typeof data.component.styles.width === 'number' 
+            ? data.component.styles.width 
+            : 375;
+          const componentHeight = data.component.styles.height || 844;
+          
+          scaleFactor = calculateScaleFactor(componentWidth, componentHeight, targetDimensions);
+          console.log(`📐 Scaling from ${componentWidth}×${componentHeight} to ${targetDimensions.width}×${targetDimensions.height} (factor: ${scaleFactor.toFixed(2)})`);
+        }
+        
+        // Create context with target dimensions and scale factor
+        const context: ProcessingContext = {
+          targetDimensions,
+          scaleFactor
+        };
+        
+        // Create main frame
+        const mainFrame = await createFigmaNode(data.component, data, context) as FrameNode;
+        
+        // Override dimensions for root frame if target dimensions provided
+        if (targetDimensions) {
+          mainFrame.resize(targetDimensions.width, targetDimensions.height);
+        }
+        
+        const frameName = data.metadata?.appName 
+          ? `${data.metadata.appName} - ${data.component.name}`
+          : `${data.component.name} (React Native)`;
+        mainFrame.name = frameName;
+        
+        // Add to current page
+        figma.currentPage.appendChild(mainFrame);
+        
+        // Center in viewport
+        figma.viewport.scrollAndZoomIntoView([mainFrame]);
+        
+        const componentCount = countComponents(data.component);
+        const deviceInfo = targetDimensions 
+          ? ` (${targetDimensions.width}×${targetDimensions.height})`
+          : '';
+        figma.notify(`✅ Imported ${componentCount} components${deviceInfo} successfully!`);
+        console.log('✅ Import complete!');
+      } catch (error) {
+        handleError(error, 'Import failed');
+      }
+      return;
+    }
   
-  // Store the original message ID from VS Code for response tracking
-  const vscodeMessageId = (msg as any)._vscodeMessageId;
-  
-  // Handle messages from VS Code extension via bridge
-  if (msg.type === 'import-from-vscode') {
-    try {
-      const data: DesignData = msg.data;
+    // Handle import-from-vscode message
+    if (isImportFromVSCodeMessage(msg)) {
+      const validation = validateDesignData(msg.data);
+      if (!validation.valid) {
+        handleError(new Error(validation.error), 'Data validation');
+        return;
+      }
+      
+      try {
+        const data = msg.data;
       
       await figma.loadFontAsync({ family: 'Inter', style: 'Regular' });
       await figma.loadFontAsync({ family: 'Inter', style: 'Medium' });
@@ -1030,18 +1132,20 @@ figma.ui.onmessage = async (msg) => {
       });
       
       figma.notify(`✅ Imported from VS Code successfully!`);
-    } catch (error: any) {
-      figma.notify(`❌ Error: ${error?.message || 'Unknown error'}`);
+    } catch (error) {
+      handleError(error, 'VS Code import failed');
       figma.ui.postMessage({
         type: 'import-complete',
         success: false,
-        error: error?.message
+        error: error instanceof Error ? error.message : String(error),
+        _vscodeMessageId: vscodeMessageId
       });
     }
+    return;
   }
   
   // Handle update from VS Code
-  if (msg.type === 'update-from-vscode') {
+  if (isUpdateFromVSCodeMessage(msg)) {
     try {
       const nodeId = msg.nodeId;
       const data: DesignData = msg.data;
@@ -1085,13 +1189,18 @@ figma.ui.onmessage = async (msg) => {
   }
   
   // Handle get node data request from VS Code
-  if (msg.type === 'get-node-data') {
+  if (isGetNodeDataMessage(msg)) {
     try {
       const nodeId = msg.nodeId;
+      
+      if (!nodeId) {
+        throw new Error('No node ID provided');
+      }
+      
       const node = figma.getNodeById(nodeId);
       
       if (!node) {
-        throw new Error('Node not found');
+        throw new Error(`Node not found: ${nodeId}`);
       }
       
       // Convert Figma node back to schema (simplified)
@@ -1109,18 +1218,29 @@ figma.ui.onmessage = async (msg) => {
         success: true,
         _vscodeMessageId: vscodeMessageId
       });
-    } catch (error: any) {
+    } catch (error) {
+      handleError(error, 'Get node data failed');
       figma.ui.postMessage({
         type: 'node-data-response',
         success: false,
-        error: error?.message,
+        error: error instanceof Error ? error.message : String(error),
         _vscodeMessageId: vscodeMessageId
       });
     }
+    return;
   }
   
+  // Handle cancel
   if (msg.type === 'cancel') {
     figma.closePlugin();
+    return;
+  }
+  
+  // Unknown message type
+  console.warn('Unknown message type:', msg.type);
+  
+  } catch (error) {
+    handleError(error, 'Message processing failed');
   }
 };
 

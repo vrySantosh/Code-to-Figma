@@ -10,9 +10,11 @@
   "networkAccess": {
     "allowedDomains": [
       "http://localhost",
-      "ws://localhost"
+      "http://localhost:3333",
+      "ws://localhost",
+      "ws://localhost:3334"
     ],
-    "reasoning": "Connect to local bridge server for VS Code extension communication"
+    "reasoning": "Connect to local bridge server for VS Code extension communication on ports 3333 (HTTP) and 3334 (WebSocket)"
   },
   "documentAccess": "dynamic-page"
 }
