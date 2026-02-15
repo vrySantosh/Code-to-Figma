@@ -8,7 +8,11 @@
   "capabilities": [],
   "enableProposedApi": false,
   "networkAccess": {
-    "allowedDomains": ["none"]
+    "allowedDomains": [
+      "http://localhost",
+      "ws://localhost"
+    ],
+    "reasoning": "Connect to local bridge server for VS Code extension communication"
   },
   "documentAccess": "dynamic-page"
 }

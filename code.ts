@@ -997,6 +997,9 @@ figma.ui.onmessage = async (msg) => {
     }
   }
   
+  // Store the original message ID from VS Code for response tracking
+  const vscodeMessageId = (msg as any)._vscodeMessageId;
+  
   // Handle messages from VS Code extension via bridge
   if (msg.type === 'import-from-vscode') {
     try {
@@ -1022,7 +1025,8 @@ figma.ui.onmessage = async (msg) => {
       figma.ui.postMessage({
         type: 'import-complete',
         nodeId: mainFrame.id,
-        success: true
+        success: true,
+        _vscodeMessageId: vscodeMessageId
       });
       
       figma.notify(`✅ Imported from VS Code successfully!`);
@@ -1064,7 +1068,8 @@ figma.ui.onmessage = async (msg) => {
       figma.ui.postMessage({
         type: 'update-complete',
         nodeId: nodeId,
-        success: true
+        success: true,
+        _vscodeMessageId: vscodeMessageId
       });
       
       figma.notify(`✅ Updated node ${nodeId} from VS Code`);
@@ -1073,7 +1078,8 @@ figma.ui.onmessage = async (msg) => {
       figma.ui.postMessage({
         type: 'update-complete',
         success: false,
-        error: error?.message
+        error: error?.message,
+        _vscodeMessageId: vscodeMessageId
       });
     }
   }
@@ -1100,13 +1106,15 @@ figma.ui.onmessage = async (msg) => {
       figma.ui.postMessage({
         type: 'node-data-response',
         data: schema,
-        success: true
+        success: true,
+        _vscodeMessageId: vscodeMessageId
       });
     } catch (error: any) {
       figma.ui.postMessage({
         type: 'node-data-response',
         success: false,
-        error: error?.message
+        error: error?.message,
+        _vscodeMessageId: vscodeMessageId
       });
     }
   }

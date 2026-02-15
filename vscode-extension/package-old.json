@@ -1,7 +1,7 @@
 {
   "name": "code-to-figma-vscode",
   "displayName": "Code to Figma",
-  "description": "Convert UI components to Figma designs seamlessly with one-click server management",
+  "description": "Convert UI components to Figma designs seamlessly",
   "version": "1.0.0",
   "publisher": "code-to-figma",
   "license": "MIT",
@@ -22,9 +22,7 @@
     "html",
     "component",
     "export",
-    "sync",
-    "server",
-    "bridge"
+    "sync"
   ],
   "engines": {
     "vscode": "^1.85.0"
@@ -34,98 +32,49 @@
     "Formatters"
   ],
   "activationEvents": [
-    "onStartupFinished"
+    "onCommand:codeToFigma.convertToJSON",
+    "onCommand:codeToFigma.exportToFigma",
+    "onCommand:codeToFigma.syncWithFigma",
+    "onCommand:codeToFigma.autoSync"
   ],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "codeToFigma.openControlPanel",
-        "title": "Open Control Panel",
-        "category": "Code to Figma",
-        "icon": "$(dashboard)"
-      },
-      {
-        "command": "codeToFigma.startServer",
-        "title": "Start Bridge Server",
-        "category": "Code to Figma",
-        "icon": "$(play)"
-      },
-      {
-        "command": "codeToFigma.stopServer",
-        "title": "Stop Bridge Server",
-        "category": "Code to Figma",
-        "icon": "$(debug-stop)"
-      },
-      {
-        "command": "codeToFigma.testConnection",
-        "title": "Test Connection",
-        "category": "Code to Figma",
-        "icon": "$(pulse)"
-      },
-      {
         "command": "codeToFigma.convertToJSON",
-        "title": "Convert Component to JSON",
-        "category": "Code to Figma"
+        "title": "Code to Figma: Convert Component to JSON"
       },
       {
         "command": "codeToFigma.exportToFigma",
-        "title": "Export to Figma",
-        "category": "Code to Figma",
-        "icon": "$(export)"
+        "title": "Code to Figma: Export to Figma"
       },
       {
         "command": "codeToFigma.syncWithFigma",
-        "title": "Sync with Figma",
-        "category": "Code to Figma"
+        "title": "Code to Figma: Sync with Figma"
       },
       {
         "command": "codeToFigma.autoSync",
-        "title": "Toggle Auto-Sync",
-        "category": "Code to Figma"
+        "title": "Code to Figma: Toggle Auto-Sync"
+      },
+      {
+        "command": "codeToFigma.selectComponent",
+        "title": "Code to Figma: Select Component"
       }
     ],
     "menus": {
-      "commandPalette": [
-        {
-          "command": "codeToFigma.openControlPanel"
-        },
-        {
-          "command": "codeToFigma.startServer"
-        },
-        {
-          "command": "codeToFigma.stopServer"
-        },
-        {
-          "command": "codeToFigma.testConnection"
-        }
-      ],
       "editor/context": [
         {
           "command": "codeToFigma.convertToJSON",
-          "group": "codeToFigma@1",
-          "when": "editorTextFocus"
+          "group": "codeToFigma",
+          "when": "editorHasSelection"
         },
         {
           "command": "codeToFigma.exportToFigma",
-          "group": "codeToFigma@2",
-          "when": "editorTextFocus"
+          "group": "codeToFigma",
+          "when": "editorHasSelection"
         }
       ]
     },
-    "keybindings": [
-      {
-        "command": "codeToFigma.openControlPanel",
-        "key": "ctrl+shift+f",
-        "mac": "cmd+shift+f",
-        "when": "!findInputFocussed"
-      },
-      {
-        "command": "codeToFigma.exportToFigma",
-        "key": "ctrl+alt+e",
-        "mac": "cmd+alt+e"
-      }
-    ],
     "configuration": {
       "title": "Code to Figma",
       "properties": {
@@ -142,12 +91,7 @@
         "codeToFigma.autoSync": {
           "type": "boolean",
           "default": false,
-          "description": "Automatically sync changes with Figma on save"
-        },
-        "codeToFigma.autoStartServer": {
-          "type": "boolean",
-          "default": false,
-          "description": "Automatically start bridge server when VS Code starts"
+          "description": "Automatically sync changes with Figma"
         },
         "codeToFigma.outputFolder": {
           "type": "string",
@@ -169,17 +113,14 @@
       "codeToFigma": [
         {
           "id": "codeToFigmaComponents",
-          "name": "Components",
-          "icon": "resources/icon.svg"
+          "name": "Components"
+        },
+        {
+          "id": "codeToFigmaSynced",
+          "name": "Synced Nodes"
         }
       ]
-    },
-    "viewsWelcome": [
-      {
-        "view": "codeToFigmaComponents",
-        "contents": "Welcome to Code to Figma!\n\n[Open Control Panel](command:codeToFigma.openControlPanel)\n\nStart by opening the control panel to manage your bridge server and monitor connections.\n\n[Start Bridge Server](command:codeToFigma.startServer)\n\nOr start the bridge server directly to begin exporting components."
-      }
-    ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
@@ -189,8 +130,7 @@
     "lint": "eslint src --ext ts",
     "test": "node ./out/test/runTest.js",
     "bridge:start": "node figma-bridge-server.js",
-    "package": "vsce package",
-    "icon:generate": "node generate-icon.js"
+    "bridge:install": "npm install express cors ws body-parser"
   },
   "devDependencies": {
     "@types/babel__traverse": "^7.28.0",

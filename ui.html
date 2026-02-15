@@ -280,46 +280,190 @@
     .tips li {
       margin-bottom: 4px;
     }
+    
+    #vscode-status {
+      display: block;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      border: 2px solid;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+    
+    #vscode-status.connected {
+      background: #d4edda;
+      color: #155724;
+      border-color: #28a745;
+      box-shadow: 0 2px 8px rgba(40, 167, 69, 0.2);
+    }
+    
+    #vscode-status.disconnected {
+      background: #f8d7da;
+      color: #721c24;
+      border-color: #dc3545;
+    }
+    
+    #vscode-status.connecting {
+      background: #fff3cd;
+      color: #856404;
+      border-color: #ffc107;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+    
+    .status-details {
+      font-size: 11px;
+      margin-top: 4px;
+      opacity: 0.8;
+    }
+    
+    .reconnect-btn {
+      background: transparent;
+      border: 1px solid currentColor;
+      color: inherit;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      cursor: pointer;
+      margin-top: 6px;
+    }
+    
+    .reconnect-btn:hover {
+      background: rgba(0,0,0,0.05);
+    }
+    
+    .status-icon {
+      width: 20px;
+      height: 20px;
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+    
+    .status-icon.spin {
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    
+    #vscode-status .status-icon {
+      width: 24px;
+      height: 24px;
+    }
   </style>
+  
+  <!-- SVG Icons -->
+  <svg style="display:none">
+    <defs>
+      <symbol id="icon-check-circle" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
+        <path d="M8 12L11 15L16 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </symbol>
+      <symbol id="icon-x-circle" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
+        <path d="M15 9L9 15M9 9L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
+      </symbol>
+      <symbol id="icon-spinner" viewBox="0 0 24 24">
+        <path d="M12 2V6M12 18V22M4.93 4.93L7.76 7.76M16.24 16.24L19.07 19.07M2 12H6M18 12H22M4.93 19.07L7.76 16.24M16.24 7.76L19.07 4.93" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
+      </symbol>
+      <symbol id="icon-refresh" viewBox="0 0 24 24">
+        <path d="M21 10C21 10 18.995 7.26822 17.3662 5.63824C15.7373 4.00827 13.4864 3 11 3C6.02944 3 2 7.02944 2 12C2 16.9706 6.02944 21 11 21C15.1031 21 18.5649 18.2543 19.6482 14.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
+        <path d="M21 10V4M21 10H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </symbol>
+      <symbol id="icon-code" viewBox="0 0 24 24">
+        <path d="M16 18L22 12L16 6M8 6L2 12L8 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </symbol>
+      <symbol id="icon-zap" viewBox="0 0 24 24">
+        <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </symbol>
+    </defs>
+  </svg>
 </head>
 <body>
-  <h1>🎨 Code to Figma</h1>
+  <h1>Code to Figma</h1>
   <p class="subtitle">Transform your codebase into editable Figma designs instantly</p>
+  <div id="vscode-status" class="connecting">
+    <div>
+      <svg class="status-icon spin" style="color: #ffc107;">
+        <use href="#icon-spinner"/>
+      </svg>
+      <span>VS Code: Connecting...</span>
+    </div>
+    <div class="status-details">Attempting WebSocket connection...</div>
+  </div>
   
   <div class="hero">
-    <h2>✨ The First Plugin That Goes Code → Figma</h2>
+    <h2>The First Plugin That Goes Code → Figma</h2>
     <p>Import React Native and Web components with complete style fidelity. Perfect for creating design documentation from existing implementations, design handoff, showing designers exactly what's built, and reverse-engineering apps into visual specs.</p>
   </div>
   
   <div class="features">
     <div class="feature">
-      <div class="feature-icon">�</div>
+      <div class="feature-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M16 18L22 12L16 6M8 6L2 12L8 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
       <div class="feature-text">React Native Support</div>
     </div>
     <div class="feature">
-      <div class="feature-icon">🌐</div>
-      <div class="feature-text">Web HTML/CSS</div>
-    </div>
-    <div class="feature">
-      <div class="feature-icon">🎨</div>
-      <div class="feature-text">Full Style Fidelity</div>
-    </div>
-    <div class="feature">
-      <div class="feature-icon">🔤</div>
+      <div class="feature-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M4 7V4H20V7M9 20H15M12 4V20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
       <div class="feature-text">Smart Font Loading</div>
     </div>
     <div class="feature">
-      <div class="feature-icon">🖼️</div>
+      <div class="feature-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/>
+          <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"/>
+          <path d="M21 15L16 10L5 21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
       <div class="feature-text">SVG Icons & Images</div>
     </div>
     <div class="feature">
-      <div class="feature-icon">⚡</div>
+      <div class="feature-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>>
+      <div class="feature-text">Smart Font Loading</div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/>
+          <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"/>
+          <path d="M21 15L16 10L5 21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="feature-text">SVG Icons & Images</div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
       <div class="feature-text">Auto-Layout Ready</div>
     </div>
   </div>
   
   <div class="instructions">
-    <h3>📖 How to Use</h3>
+    <h3>How to Use</h3>
     <div class="step">
       <span class="step-number">1</span>
       <span class="step-text"><strong>Extract Component Data:</strong> Use the extraction script to analyze your React Native or Web component. This generates a JSON representation of your UI with all styles and structure.</span>
@@ -329,6 +473,12 @@
       <span class="step-text"><strong>Copy JSON Output:</strong> The extractor will output a JSON object containing your component tree, styles, and metadata.</span>
     </div>
     <div class="step">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="display: inline-block; vertical-align: middle; margin-right: 4px;">
+      <rect x="5" y="2" width="14" height="20" rx="2" stroke="currentColor" stroke-width="2"/>
+      <path d="M12 18H12.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    Target Device / Canvas Size
+  
       <span class="step-number">3</span>
       <span class="step-text"><strong>Select Target Device:</strong> Choose your target device dimensions or use custom sizes for web pages.</span>
     </div>
@@ -338,7 +488,13 @@
     </div>
   </div>
   
-  <label for="deviceSelect">📱 Target Device / Canvas Size</label>
+  <label for="deviceSelect">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="display: inline-block; vertical-align: middle; margin-right: 4px;">
+      <rect x="5" y="2" width="14" height="20" rx="2" stroke="currentColor" stroke-width="2"/>
+      <path d="M12 18H12.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    Target Device / Canvas Size
+  </label>
   <select id="deviceSelect">
     <optgroup label="iPhone Models">
       <option value="375,812">iPhone 13/14/15 (375 × 812)</option>
@@ -405,17 +561,44 @@
       <li>Supports Web HTML elements (div, span, button, input, img, etc.)</li>
       <li>All text layers are editable, images are imported, SVG icons are vectorized</li>
       <li>Flexbox layouts automatically convert to Figma Auto-layout</li>
-      <li>Use Cmd/Ctrl+Enter to quickly import after pasting JSON</li>
-    </ul>
-  </div>
-  
-  <div class="buttons">
-    <button class="secondary" id="cancel">Cancel</button>
-    <button class="primary" id="create">🚀 Import to Figma</button>
+      <li>Use Cmd/Ctrl+Enter to quickly 
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="display: inline-block; vertical-align: middle; margin-right: 6px;">
+        <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Import to Figma
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="#dc3545" style="display: inline-block; vertical-align: middle; margin: 0 2px;">
+      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+    </svg>
+   
+    ng JSON</li>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="display: inline-block; vertical-align: middle; margin-right: 6px;">
+        <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Import to Figma
+    </button>
   </div>
   
   <div class="footer">
-    <strong>Code to Figma</strong> v1.2 • Made with ❤️ for developers & designers<br>
+    <strong>Code to Figma</strong> v1.2 • Made with
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="#dc3545" style="display: inline-block; vertical-align: middle; margin: 0 2px;">
+      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+    </svg>
+   
+    <button class="secondary" id="cancel">Cancel</button>
+    <button class="primary" id="create">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="display: inline-block; vertical-align: middle; margin-right: 6px;">
+        <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Import to Figma
+    </button>
+  </div>
+  
+  <div class="footer">
+    <strong>Code to Figma</strong> v1.2 • Made with
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="#dc3545" style="display: inline-block; vertical-align: middle; margin: 0 2px;">
+      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+    </svg>
+    for developers & designers<br>
     <a href="https://github.com/vrySantosh/Code-to-Figma" target="_blank">Documentation</a> • 
     <a href="https://github.com/vrySantosh/Code-to-Figma/issues" target="_blank">Report Issues</a> • 
     <a href="https://github.com/vrySantosh/Code-to-Figma#examples" target="_blank">Examples</a>
@@ -478,36 +661,41 @@
           targetWidth = parseInt(customWidth.value) || 390;
           targetHeight = parseInt(customHeight.value) || 844;
         } else {
-          // Parse preset device dimensions
-          const [width, height] = deviceSelect.value.split(',').map(Number);
-          targetWidth = width;
-          targetHeight = height;
-        }
+        console.log('[Connection] Attempting to connect to ws://localhost:3334...');
+        showVSCodeStatus('connecting', 'Connecting to ws://localhost:3334...');
         
-        // Send data to plugin backend for processing
-        parent.postMessage({ 
-          pluginMessage: { 
-            type: 'create-design', 
-            data,
-            targetDimensions: {
-              width: targetWidth,
-              height: targetHeight
-            }
-          } 
-        }, '*');
+        vscodeWs = new WebSocket('ws://localhost:3334');
+        
+        vscodeWs.onopen = () => {
+          console.log('[Connection] ✅ Connected to VS Code bridge');
+          vscodeConnected = true;
+          showVSCodeStatus('connected', 'Bridge server ready');
+        };
+        
+        vscodeWs.onmessage = (event) => {
+          try {
+            const message = JSON.parse(event.data);
+            handleVSCodeMessage(message);
+          } catch (error) {
+            console.error('Error parsing VS Code message:', error);
+          }
+        };
+        
+        vscodeWs.onclose = () => {
+          console.log('[Connection] ❌ Disconnected from VS Code bridge');
+          vscodeConnected = false;
+          showVSCodeStatus('disconnected', 'Will retry in 5 seconds...');
+          // Try to reconnect after 5 seconds
+          setTimeout(connectToVSCodeBridge, 5000);
+        };
+        
+        vscodeWs.onerror = (error) => {
+          console.error('[Connection] ⚠️ WebSocket error:', error);
+          showVSCodeStatus('disconnected', 'Connection failed. Is bridge server running?');
+        };
       } catch (error) {
-        alert('⚠️ JSON Parse Error\n\nPlease ensure your JSON is properly formatted.\n\nCommon issues:\n• Missing quotes around property names\n• Trailing commas\n• Unescaped special characters\n\nError: ' + error.message);
-      }
-    };
-    
-    cancelButton.onclick = () => {
-      parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*');
-    };
-    
-    // Enable keyboard shortcuts
-    jsonInput.addEventListener('keydown', (e) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
-        createButton.click();
+        console.error('[Connection] ❌ Failed to connect:', error);
+        showVSCodeStatus('disconnected', 'Error: ' + error.message
       }
     });
     
@@ -555,52 +743,116 @@
       
       console.log('Received from VS Code:', type);
       
+      // Map VS Code message types to Figma plugin message types
+      const typeMap = {
+        'export': 'import-from-vscode',
+        'update': 'update-from-vscode',
+        'get-node': 'get-node-data'
+      };
+      
+      const pluginMessageType = typeMap[type] || type;
+      
       // Forward to plugin code
       parent.postMessage({
         pluginMessage: {
-          type: type,
+          type: pluginMessageType,
           data: data,
-          nodeId: nodeId
+          nodeId: nodeId,
+          _vscodeMessageId: id  // Store ID for response tracking
         }
       }, '*');
+    }
+    
+    function showVSCodeStatus(state, details) {
+      const statusElement = document.getElementById('vscode-status');
       
-      // Listen for response from plugin code
-      window.addEventListener('message', (event) => {
-        if (event.data.pluginMessage) {
-          const response = event.data.pluginMessage;
-          if (response.type === 'import-complete' || 
-              response.type === 'update-complete' || 
-              response.type === 'node-data-response') {
-            // Send response back to VS Code
-            if (vscodeWs && vscodeWs.readyState === WebSocket.OPEN) {
-              vscodeWs.send(JSON.stringify({
-                id: id,
-                success: response.success,
-                nodeId: response.nodeId,
-                data: response.data,
-                message: response.success ? 'Operation completed' : response.error
-              }));
-            }
-          }
+      if (statusElement) {
+        let statusHTML = '';
+        let buttonHtml = '';
+        let iconColor = '';
+        let iconId = '';
+        let iconClass = '';
+        
+        if (state === 'connected') {
+          iconId = 'icon-check-circle';
+          iconColor = '#28a745';
+          statusHTML = 'VS Code: Connected';
+          statusElement.className = 'connected';
+        } else if (state === 'connecting') {
+          iconId = 'icon-spinner';
+          iconColor = '#ffc107';
+          iconClass = 'spin';
+          statusHTML = 'VS Code: Connecting...';
+          statusElement.className = 'connecting';
+        } else {
+          iconId = 'icon-x-circle';
+          iconColor = '#dc3545';
+          statusHTML = 'VS Code: Disconnected';
+          statusElement.className = 'disconnected';
+          buttonHtml = `<button class="reconnect-btn" onclick="connectToVSCodeBridge()">
+            <svg class="status-icon" style="color: currentColor;">
+              <use href="#icon-refresh"/>
+            </svg>
+            Reconnect Now
+          </button>`;
         }
-      });
+        
+        statusElement.innerHTML = `
+          <div>
+            <svg class="status-icon ${iconClass}" style="color: ${iconColor};">
+              <use href="#${iconId}"/>
+            </svg>
+            <span>${statusHTML}</span>
+          </div>
+          <div class="status-details">${details}</div>
+          ${buttonHtml}
+        `;
+      }
     }
     
     function showVSCodeStatus(connected) {
-      // Add status indicator if doesn't exist
-      let statusElement = document.getElementById('vscode-status');
-      if (!statusElement) {
-        statusElement = document.createElement('div');
-        statusElement.id = 'vscode-status';
-        statusElement.style.cssText = 'position: fixed; bottom: 10px; right: 10px; font-size: 11px; padding: 4px 8px; border-radius: 4px; background: rgba(0,0,0,0.05);';
-        document.body.appendChild(statusElement);
+      const statusElement = document.getElementById('vscode-status');
+      if (statusElement) {
+        const iconId = connected ? 'icon-check-circle' : 'icon-x-circle';
+        const iconColor = connected ? '#28a745' : '#dc3545';
+        const text = connected ? 'VS Code: Connected' : 'VS Code: Disconnected';
+        
+        statusElement.innerHTML = `
+          <div>
+            <svg class="status-icon" style="color: ${iconColor};">
+              <use href="#${iconId}"/>
+            </svg>
+            <span>${text}</span>
+          </div>
+        `;
+        statusElement.className = connected ? 'connected' : 'disconnected';
       }
-      
-      statusElement.textContent = connected 
-        ? '🟢 VS Code Connected' 
-        : '🔴 VS Code Disconnected';
-      statusElement.style.color = connected ? '#00AA00' : '#FF0000';
     }
+    
+    // Handle responses from Figma plugin code and forward to VS Code
+    window.addEventListener('message', (event) => {
+      if (event.data.pluginMessage) {
+        const response = event.data.pluginMessage;
+        
+        // Check if this is a response to a VS Code request
+        if (response.type === 'import-complete' || 
+            response.type === 'update-complete' || 
+            response.type === 'node-data-response') {
+          
+          // Send response back to VS Code via WebSocket
+          if (vscodeWs && vscodeWs.readyState === WebSocket.OPEN) {
+            vscodeWs.send(JSON.stringify({
+              id: response._vscodeMessageId || Date.now(),
+              type: response.type,
+              success: response.success !== false,
+              nodeId: response.nodeId,
+              data: response.data,
+              message: response.success !== false ? 'Operation completed' : response.error
+            }));
+          }
+        }
+      }
+    });
     
     // Try to connect to VS Code bridge on load
     connectToVSCodeBridge();
