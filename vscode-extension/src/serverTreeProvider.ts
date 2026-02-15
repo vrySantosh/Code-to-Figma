@@ -309,19 +309,55 @@ export class ServerTreeProvider implements vscode.TreeDataProvider<TreeNode> {
         }
 
         this.addLog('info', 'Stopping server...');
-        this.serverProcess.kill();
-        this.serverProcess = null;
-        this.serverStatus = 'stopped';
-        this.httpStatus = false;
-        this.wsStatus = false;
-        this.refresh();
-        vscode.window.showInformationMessage('Bridge server stopped');
+        
+        try {
+            // Send SIGTERM for graceful shutdown
+            this.serverProcess.kill('SIGTERM');
+            
+            // Set up fallback to force kill after 5 seconds
+            const killTimeout = setTimeout(() => {
+                if (this.serverProcess && !this.serverProcess.killed) {
+                    this.addLog('warn', 'Server did not stop gracefully, forcing shutdown...');
+                    this.serverProcess.kill('SIGKILL');
+                }
+            }, 5000);
+
+            // Wait for the process to actually exit
+            await new Promise<void>((resolve) => {
+                if (!this.serverProcess) {
+                    resolve();
+                    return;
+                }
+
+                this.serverProcess.once('exit', () => {
+                    clearTimeout(killTimeout);
+                    resolve();
+                });
+            });
+
+            this.serverProcess = null;
+            this.serverStatus = 'stopped';
+            this.httpStatus = false;
+            this.wsStatus = false;
+            this.refresh();
+            this.addLog('info', 'Server stopped successfully');
+            vscode.window.showInformationMessage('Bridge server stopped');
+        } catch (error) {
+            this.addLog('error', `Error stopping server: ${error}`);
+            this.serverProcess = null;
+            this.serverStatus = 'error';
+            this.httpStatus = false;
+            this.wsStatus = false;
+            this.refresh();
+            vscode.window.showErrorMessage(`Failed to stop server: ${error}`);
+        }
     }
 
     async restartServer(): Promise<void> {
         this.addLog('info', 'Restarting server...');
         await this.stopServer();
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        // Give extra time for ports to be released
+        await new Promise(resolve => setTimeout(resolve, 2000));
         await this.startServer();
     }
 

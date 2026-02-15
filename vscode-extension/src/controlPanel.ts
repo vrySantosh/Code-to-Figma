@@ -224,22 +224,50 @@ export class ControlPanelProvider {
         }
 
         try {
-            this.serverProcess.kill('SIGTERM');
-            
-            // Force kill after 5 seconds if not stopped
-            setTimeout(() => {
-                if (this.serverProcess) {
-                    this.serverProcess.kill('SIGKILL');
-                }
-            }, 5000);
-
             this.panel?.webview.postMessage({
                 command: 'notification',
                 type: 'info',
                 message: 'Stopping server...'
             });
 
+            // Send SIGTERM for graceful shutdown
+            this.serverProcess.kill('SIGTERM');
+            
+            // Set up fallback to force kill after 5 seconds
+            const killTimeout = setTimeout(() => {
+                if (this.serverProcess && !this.serverProcess.killed) {
+                    this.serverProcess.kill('SIGKILL');
+                }
+            }, 5000);
+
+            // Wait for the process to actually exit
+            await new Promise<void>((resolve) => {
+                if (!this.serverProcess) {
+                    resolve();
+                    return;
+                }
+
+                this.serverProcess.once('exit', () => {
+                    clearTimeout(killTimeout);
+                    resolve();
+                });
+            });
+
+            this.serverProcess = null;
+
+            this.panel?.webview.postMessage({
+                command: 'notification',
+                type: 'success',
+                message: 'Server stopped successfully'
+            });
+
+            this.panel?.webview.postMessage({
+                command: 'serverStatusChanged',
+                status: 'stopped'
+            });
+
         } catch (error) {
+            this.serverProcess = null;
             this.panel?.webview.postMessage({
                 command: 'notification',
                 type: 'error',
@@ -257,10 +285,10 @@ export class ControlPanelProvider {
 
         await this.stopServer();
         
-        // Wait for server to stop
-        setTimeout(async () => {
-            await this.startServer();
-        }, 2000);
+        // Wait for ports to be released
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        
+        await this.startServer();
     }
 
     public async testConnection() {
