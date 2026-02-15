@@ -997,6 +997,120 @@ figma.ui.onmessage = async (msg) => {
     }
   }
   
+  // Handle messages from VS Code extension via bridge
+  if (msg.type === 'import-from-vscode') {
+    try {
+      const data: DesignData = msg.data;
+      
+      await figma.loadFontAsync({ family: 'Inter', style: 'Regular' });
+      await figma.loadFontAsync({ family: 'Inter', style: 'Medium' });
+      await figma.loadFontAsync({ family: 'Inter', style: 'Semi Bold' });
+      await figma.loadFontAsync({ family: 'Inter', style: 'Bold' });
+      
+      const context: ProcessingContext = { scaleFactor: 1 };
+      const mainFrame = await createFigmaNode(data.component, data, context) as FrameNode;
+      
+      const frameName = data.metadata?.appName 
+        ? `${data.metadata.appName} - ${data.component.name}`
+        : `${data.component.name} (VS Code)`;
+      mainFrame.name = frameName;
+      
+      figma.currentPage.appendChild(mainFrame);
+      figma.viewport.scrollAndZoomIntoView([mainFrame]);
+      
+      // Send response back to VS Code
+      figma.ui.postMessage({
+        type: 'import-complete',
+        nodeId: mainFrame.id,
+        success: true
+      });
+      
+      figma.notify(`✅ Imported from VS Code successfully!`);
+    } catch (error: any) {
+      figma.notify(`❌ Error: ${error?.message || 'Unknown error'}`);
+      figma.ui.postMessage({
+        type: 'import-complete',
+        success: false,
+        error: error?.message
+      });
+    }
+  }
+  
+  // Handle update from VS Code
+  if (msg.type === 'update-from-vscode') {
+    try {
+      const nodeId = msg.nodeId;
+      const data: DesignData = msg.data;
+      
+      const node = figma.getNodeById(nodeId);
+      if (!node || node.type !== 'FRAME') {
+        throw new Error('Node not found or not a frame');
+      }
+      
+      await figma.loadFontAsync({ family: 'Inter', style: 'Regular' });
+      
+      // Remove all children
+      node.children.forEach(child => child.remove());
+      
+      // Recreate with new data
+      const context: ProcessingContext = { scaleFactor: 1 };
+      if (data.component.children) {
+        for (const child of data.component.children) {
+          const childNode = await createFigmaNode(child, data, context);
+          (node as FrameNode).appendChild(childNode);
+        }
+      }
+      
+      figma.ui.postMessage({
+        type: 'update-complete',
+        nodeId: nodeId,
+        success: true
+      });
+      
+      figma.notify(`✅ Updated node ${nodeId} from VS Code`);
+    } catch (error: any) {
+      figma.notify(`❌ Update error: ${error?.message}`);
+      figma.ui.postMessage({
+        type: 'update-complete',
+        success: false,
+        error: error?.message
+      });
+    }
+  }
+  
+  // Handle get node data request from VS Code
+  if (msg.type === 'get-node-data') {
+    try {
+      const nodeId = msg.nodeId;
+      const node = figma.getNodeById(nodeId);
+      
+      if (!node) {
+        throw new Error('Node not found');
+      }
+      
+      // Convert Figma node back to schema (simplified)
+      const schema = {
+        component: {
+          type: 'View',
+          name: node.name,
+          styles: {}
+        }
+      };
+      
+      figma.ui.postMessage({
+        type: 'node-data-response',
+        data: schema,
+        success: true
+      });
+    } catch (error: any) {
+      figma.ui.postMessage({
+        type: 'node-data-response',
+        success: false,
+        error: error?.message
+      });
+    }
+  }
+  
   if (msg.type === 'cancel') {
     figma.closePlugin();
   }

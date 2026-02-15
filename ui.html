@@ -510,6 +510,100 @@
         createButton.click();
       }
     });
+    
+    // Initialize VS Code bridge connection
+    let vscodeWs = null;
+    let vscodeConnected = false;
+    
+    function connectToVSCodeBridge() {
+      try {
+        vscodeWs = new WebSocket('ws://localhost:3334');
+        
+        vscodeWs.onopen = () => {
+          console.log('Connected to VS Code bridge');
+          vscodeConnected = true;
+          showVSCodeStatus(true);
+        };
+        
+        vscodeWs.onmessage = (event) => {
+          try {
+            const message = JSON.parse(event.data);
+            handleVSCodeMessage(message);
+          } catch (error) {
+            console.error('Error parsing VS Code message:', error);
+          }
+        };
+        
+        vscodeWs.onclose = () => {
+          console.log('Disconnected from VS Code bridge');
+          vscodeConnected = false;
+          showVSCodeStatus(false);
+          // Try to reconnect after 5 seconds
+          setTimeout(connectToVSCodeBridge, 5000);
+        };
+        
+        vscodeWs.onerror = (error) => {
+          console.error('VS Code WebSocket error:', error);
+        };
+      } catch (error) {
+        console.error('Failed to connect to VS Code bridge:', error);
+      }
+    }
+    
+    function handleVSCodeMessage(message) {
+      const { id, type, data, nodeId } = message;
+      
+      console.log('Received from VS Code:', type);
+      
+      // Forward to plugin code
+      parent.postMessage({
+        pluginMessage: {
+          type: type,
+          data: data,
+          nodeId: nodeId
+        }
+      }, '*');
+      
+      // Listen for response from plugin code
+      window.addEventListener('message', (event) => {
+        if (event.data.pluginMessage) {
+          const response = event.data.pluginMessage;
+          if (response.type === 'import-complete' || 
+              response.type === 'update-complete' || 
+              response.type === 'node-data-response') {
+            // Send response back to VS Code
+            if (vscodeWs && vscodeWs.readyState === WebSocket.OPEN) {
+              vscodeWs.send(JSON.stringify({
+                id: id,
+                success: response.success,
+                nodeId: response.nodeId,
+                data: response.data,
+                message: response.success ? 'Operation completed' : response.error
+              }));
+            }
+          }
+        }
+      });
+    }
+    
+    function showVSCodeStatus(connected) {
+      // Add status indicator if doesn't exist
+      let statusElement = document.getElementById('vscode-status');
+      if (!statusElement) {
+        statusElement = document.createElement('div');
+        statusElement.id = 'vscode-status';
+        statusElement.style.cssText = 'position: fixed; bottom: 10px; right: 10px; font-size: 11px; padding: 4px 8px; border-radius: 4px; background: rgba(0,0,0,0.05);';
+        document.body.appendChild(statusElement);
+      }
+      
+      statusElement.textContent = connected 
+        ? '🟢 VS Code Connected' 
+        : '🔴 VS Code Disconnected';
+      statusElement.style.color = connected ? '#00AA00' : '#FF0000';
+    }
+    
+    // Try to connect to VS Code bridge on load
+    connectToVSCodeBridge();
   </script>
 </body>
 </html>

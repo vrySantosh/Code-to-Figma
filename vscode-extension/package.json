@@ -1,0 +1,133 @@
+{
+  "name": "code-to-figma-vscode",
+  "displayName": "Code to Figma",
+  "description": "Convert UI components to Figma designs seamlessly",
+  "version": "1.0.0",
+  "publisher": "code-to-figma",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other",
+    "Formatters"
+  ],
+  "activationEvents": [
+    "onCommand:codeToFigma.convertToJSON",
+    "onCommand:codeToFigma.exportToFigma",
+    "onCommand:codeToFigma.syncWithFigma",
+    "onCommand:codeToFigma.autoSync"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "codeToFigma.convertToJSON",
+        "title": "Code to Figma: Convert Component to JSON"
+      },
+      {
+        "command": "codeToFigma.exportToFigma",
+        "title": "Code to Figma: Export to Figma"
+      },
+      {
+        "command": "codeToFigma.syncWithFigma",
+        "title": "Code to Figma: Sync with Figma"
+      },
+      {
+        "command": "codeToFigma.autoSync",
+        "title": "Code to Figma: Toggle Auto-Sync"
+      },
+      {
+        "command": "codeToFigma.selectComponent",
+        "title": "Code to Figma: Select Component"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "codeToFigma.convertToJSON",
+          "group": "codeToFigma",
+          "when": "editorHasSelection"
+        },
+        {
+          "command": "codeToFigma.exportToFigma",
+          "group": "codeToFigma",
+          "when": "editorHasSelection"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Code to Figma",
+      "properties": {
+        "codeToFigma.figmaFileId": {
+          "type": "string",
+          "default": "",
+          "description": "Your Figma file ID"
+        },
+        "codeToFigma.figmaAccessToken": {
+          "type": "string",
+          "default": "",
+          "description": "Your Figma personal access token"
+        },
+        "codeToFigma.autoSync": {
+          "type": "boolean",
+          "default": false,
+          "description": "Automatically sync changes with Figma"
+        },
+        "codeToFigma.outputFolder": {
+          "type": "string",
+          "default": "./figma-exports",
+          "description": "Folder to save generated JSON files"
+        }
+      }
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "codeToFigma",
+          "title": "Code to Figma",
+          "icon": "resources/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "codeToFigma": [
+        {
+          "id": "codeToFigmaComponents",
+          "name": "Components"
+        },
+        {
+          "id": "codeToFigmaSynced",
+          "name": "Synced Nodes"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js",
+    "bridge:start": "node figma-bridge-server.js",
+    "bridge:install": "npm install express cors ws body-parser"
+  },
+  "devDependencies": {
+    "@types/babel__traverse": "^7.28.0",
+    "@types/node": "^20.x",
+    "@types/vscode": "^1.85.0",
+    "@typescript-eslint/eslint-plugin": "^6.13.0",
+    "@typescript-eslint/parser": "^6.13.0",
+    "eslint": "^8.54.0",
+    "typescript": "^5.3.0"
+  },
+  "dependencies": {
+    "@babel/parser": "^7.23.0",
+    "@babel/traverse": "^7.23.0",
+    "axios": "^1.6.0",
+    "body-parser": "^2.2.2",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "ws": "^8.19.0"
+  }
+}

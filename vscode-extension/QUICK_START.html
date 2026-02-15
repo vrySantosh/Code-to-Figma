@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code to Figma - Quick Start</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            line-height: 1.6;
+            color: #333;
+        }
+        h1 {
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #555;
+            margin-top: 30px;
+        }
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        pre code {
+            background: none;
+            padding: 0;
+            color: #f8f8f2;
+        }
+        .step {
+            background: #f9f9f9;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .tip {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .success {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        img {
+            max-width: 100%;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <h1>🚀 Code to Figma - VS Code Extension Quick Start</h1>
+    
+    <p>Welcome! This guide will help you set up and start using the Code to Figma VS Code extension in minutes.</p>
+    
+    <h2>📦 Installation</h2>
+    
+    <div class="step">
+        <h3>Step 1: Install Dependencies</h3>
+        <p>Open your terminal and navigate to the extension folder:</p>
+        <pre><code>cd "/Users/Santosh/Code to Figma/vscode-extension"
+npm install</code></pre>
+    </div>
+    
+    <div class="step">
+        <h3>Step 2: Compile TypeScript</h3>
+        <pre><code>npm run compile</code></pre>
+    </div>
+    
+    <div class="step">
+        <h3>Step 3: Install Bridge Server Dependencies</h3>
+        <pre><code>npm install express cors ws body-parser</code></pre>
+    </div>
+    
+    <h2>⚙️ Configuration</h2>
+    
+    <div class="step">
+        <h3>Step 1: Get Figma Access Token</h3>
+        <ol>
+            <li>Go to <a href="https://www.figma.com/settings" target="_blank">Figma Settings</a></li>
+            <li>Scroll to "Personal Access Tokens"</li>
+            <li>Click "Generate new token"</li>
+            <li>Copy the token (you'll need it in VS Code)</li>
+        </ol>
+    </div>
+    
+    <div class="step">
+        <h3>Step 2: Get Figma File ID</h3>
+        <p>Your Figma file URL looks like:</p>
+        <code>https://www.figma.com/file/<strong>ABC123XYZ</strong>/My-Design-File</code>
+        <p>Copy the part in bold (ABC123XYZ)</p>
+    </div>
+    
+    <div class="step">
+        <h3>Step 3: Configure VS Code Settings</h3>
+        <ol>
+            <li>Open VS Code Settings (<code>Cmd/Ctrl + ,</code>)</li>
+            <li>Search for "Code to Figma"</li>
+            <li>Set your Figma File ID</li>
+            <li>Set your Figma Access Token</li>
+        </ol>
+        
+        <p>Or add to your <code>settings.json</code>:</p>
+        <pre><code>{
+  "codeToFigma.figmaFileId": "YOUR_FILE_ID",
+  "codeToFigma.figmaAccessToken": "YOUR_TOKEN",
+  "codeToFigma.outputFolder": "./figma-exports",
+  "codeToFigma.autoSync": false
+}</code></pre>
+    </div>
+    
+    <h2>🎯 Usage</h2>
+    
+    <div class="step">
+        <h3>Step 1: Start Bridge Server</h3>
+        <p>In a terminal window, run:</p>
+        <pre><code>cd "/Users/Santosh/Code to Figma/vscode-extension"
+node figma-bridge-server.js</code></pre>
+        <p>You should see:</p>
+        <pre><code>Figma Bridge Server running on http://localhost:3333
+WebSocket server running on ws://localhost:3334
+Waiting for Figma plugin to connect...</code></pre>
+        <p><strong>Keep this terminal open!</strong></p>
+    </div>
+    
+    <div class="step">
+        <h3>Step 2: Launch Extension in Development Mode</h3>
+        <ol>
+            <li>Open <code>vscode-extension</code> folder in VS Code</li>
+            <li>Press <code>F5</code> (or Run → Start Debugging)</li>
+            <li>A new VS Code window will open with the extension loaded</li>
+        </ol>
+    </div>
+    
+    <div class="step">
+        <h3>Step 3: Open Figma Plugin</h3>
+        <ol>
+            <li>Open Figma (desktop or web)</li>
+            <li>Open your design file</li>
+            <li>Go to Plugins → Development → Code to Figma</li>
+            <li>Look for "🟢 VS Code Connected" at the bottom</li>
+        </ol>
+    </div>
+    
+    <div class="success">
+        <strong>✅ Setup Complete!</strong> You're ready to start converting components!
+    </div>
+    
+    <h2>💡 First Export</h2>
+    
+    <div class="step">
+        <h3>Example Component</h3>
+        <p>Create a test file: <code>test-component.tsx</code></p>
+        <pre><code>import React from 'react';
+import { View, Text } from 'react-native';
+
+export const WelcomeCard = () => {
+  return (
+    &lt;View style={{
+      backgroundColor: '#FFFFFF',
+      padding: 24,
+      borderRadius: 16,
+      width: 300
+    }}&gt;
+      &lt;Text style={{
+        fontSize: 24,
+        fontWeight: '700',
+        color: '#000000'
+      }}&gt;
+        Welcome!
+      &lt;/Text&gt;
+      &lt;Text style={{
+        fontSize: 16,
+        color: '#666666',
+        marginTop: 8
+      }}&gt;
+        This is a test component
+      &lt;/Text&gt;
+    &lt;/View&gt;
+  );
+};</code></pre>
+    </div>
+    
+    <div class="step">
+        <h3>Export to Figma</h3>
+        <ol>
+            <li>Select the component code (or just place cursor inside)</li>
+            <li>Right-click → "Code to Figma: Export to Figma"</li>
+            <li>Or use status bar button "Export to Figma"</li>
+            <li>Check Figma - your component should appear!</li>
+        </ol>
+    </div>
+    
+    <h2>🔧 Commands</h2>
+    
+    <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+        <tr style="background: #f4f4f4;">
+            <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">Command</th>
+            <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">Description</th>
+        </tr>
+        <tr>
+            <td style="padding: 10px; border: 1px solid #ddd;"><code>Convert Component to JSON</code></td>
+            <td style="padding: 10px; border: 1px solid #ddd;">Parse component and save as JSON</td>
+        </tr>
+        <tr>
+            <td style="padding: 10px; border: 1px solid #ddd;"><code>Export to Figma</code></td>
+            <td style="padding: 10px; border: 1px solid #ddd;">Send component directly to Figma</td>
+        </tr>
+        <tr>
+            <td style="padding: 10px; border: 1px solid #ddd;"><code>Sync with Figma</code></td>
+            <td style="padding: 10px; border: 1px solid #ddd;">Update existing Figma node</td>
+        </tr>
+        <tr>
+            <td style="padding: 10px; border: 1px solid #ddd;"><code>Toggle Auto-Sync</code></td>
+            <td style="padding: 10px; border: 1px solid #ddd;">Enable/disable automatic syncing</td>
+        </tr>
+    </table>
+    
+    <h2>🎨 Sidebar</h2>
+    
+    <div class="step">
+        <p>Click the "Code to Figma" icon in the Activity Bar to see:</p>
+        <ul>
+            <li>All synced components</li>
+            <li>Figma Node IDs</li>
+            <li>Last sync times</li>
+            <li>Quick file navigation</li>
+        </ul>
+    </div>
+    
+    <h2>🔄 Auto-Sync</h2>
+    
+    <div class="tip">
+        <strong>💡 Tip:</strong> Enable auto-sync to automatically update Figma when you save files!
+        <p>Command Palette → "Code to Figma: Toggle Auto-Sync"</p>
+    </div>
+    
+    <h2>❓ Troubleshooting</h2>
+    
+    <div class="step">
+        <h3>Bridge Server Not Connecting</h3>
+        <p>Check if port 3333 is available:</p>
+        <pre><code>lsof -i :3333</code></pre>
+        <p>If blocked, kill the process or change the port in <code>figma-bridge-server.js</code></p>
+    </div>
+    
+    <div class="step">
+        <h3>Figma Plugin Shows Disconnected</h3>
+        <ol>
+            <li>Ensure bridge server is running</li>
+            <li>Restart the Figma plugin</li>
+            <li>Check firewall settings</li>
+        </ol>
+    </div>
+    
+    <div class="step">
+        <h3>Extension Not Loading</h3>
+        <ol>
+            <li>Compile TypeScript: <code>npm run compile</code></li>
+            <li>Restart VS Code Extension Host (<code>F5</code>)</li>
+            <li>Check Output panel for errors</li>
+        </ol>
+    </div>
+    
+    <h2>📚 Next Steps</h2>
+    
+    <ul>
+        <li>Try exporting different component types</li>
+        <li>Experiment with complex layouts</li>
+        <li>Test auto-sync functionality</li>
+        <li>Check the full README for advanced features</li>
+    </ul>
+    
+    <div class="success">
+        <strong>🎉 You're all set!</strong> Start building amazing Figma designs from your code.
+    </div>
+    
+    <hr style="margin: 40px 0; border: none; border-top: 1px solid #ddd;">
+    
+    <p style="text-align: center; color: #999;">
+        Need help? Check the <a href="README.md">full documentation</a> or open an issue on GitHub.
+    </p>
+</body>
+</html>
