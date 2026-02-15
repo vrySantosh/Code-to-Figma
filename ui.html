@@ -661,41 +661,34 @@
           targetWidth = parseInt(customWidth.value) || 390;
           targetHeight = parseInt(customHeight.value) || 844;
         } else {
-        console.log('[Connection] Attempting to connect to ws://localhost:3334...');
-        showVSCodeStatus('connecting', 'Connecting to ws://localhost:3334...');
+          const [width, height] = deviceSelect.value.split(',').map(Number);
+          targetWidth = width;
+          targetHeight = height;
+        }
         
-        vscodeWs = new WebSocket('ws://localhost:3334');
-        
-        vscodeWs.onopen = () => {
-          console.log('[Connection] ✅ Connected to VS Code bridge');
-          vscodeConnected = true;
-          showVSCodeStatus('connected', 'Bridge server ready');
-        };
-        
-        vscodeWs.onmessage = (event) => {
-          try {
-            const message = JSON.parse(event.data);
-            handleVSCodeMessage(message);
-          } catch (error) {
-            console.error('Error parsing VS Code message:', error);
-          }
-        };
-        
-        vscodeWs.onclose = () => {
-          console.log('[Connection] ❌ Disconnected from VS Code bridge');
-          vscodeConnected = false;
-          showVSCodeStatus('disconnected', 'Will retry in 5 seconds...');
-          // Try to reconnect after 5 seconds
-          setTimeout(connectToVSCodeBridge, 5000);
-        };
-        
-        vscodeWs.onerror = (error) => {
-          console.error('[Connection] ⚠️ WebSocket error:', error);
-          showVSCodeStatus('disconnected', 'Connection failed. Is bridge server running?');
-        };
+        parent.postMessage({ 
+          pluginMessage: { 
+            type: 'create-design', 
+            data,
+            targetDimensions: {
+              width: targetWidth,
+              height: targetHeight
+            }
+          } 
+        }, '*');
       } catch (error) {
-        console.error('[Connection] ❌ Failed to connect:', error);
-        showVSCodeStatus('disconnected', 'Error: ' + error.message
+        alert('⚠️ Invalid JSON format. Please check your data and try again.\n\n' + error.message);
+      }
+    };
+    
+    cancelButton.onclick = () => {
+      parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*');
+    };
+    
+    // Enable keyboard shortcuts
+    jsonInput.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+        createButton.click();
       }
     });
     
@@ -710,7 +703,7 @@
         vscodeWs.onopen = () => {
           console.log('Connected to VS Code bridge');
           vscodeConnected = true;
-          showVSCodeStatus(true);
+          showVSCodeStatus('connected', 'Bridge server ready');
         };
         
         vscodeWs.onmessage = (event) => {
@@ -725,16 +718,18 @@
         vscodeWs.onclose = () => {
           console.log('Disconnected from VS Code bridge');
           vscodeConnected = false;
-          showVSCodeStatus(false);
+          showVSCodeStatus('disconnected', 'Will retry in 5 seconds...');
           // Try to reconnect after 5 seconds
           setTimeout(connectToVSCodeBridge, 5000);
         };
         
         vscodeWs.onerror = (error) => {
           console.error('VS Code WebSocket error:', error);
+          showVSCodeStatus('disconnected', 'Connection failed. Is bridge server running?');
         };
       } catch (error) {
         console.error('Failed to connect to VS Code bridge:', error);
+        showVSCodeStatus('disconnected', 'Error: ' + error.message);
       }
     }
     
@@ -807,25 +802,6 @@
           <div class="status-details">${details}</div>
           ${buttonHtml}
         `;
-      }
-    }
-    
-    function showVSCodeStatus(connected) {
-      const statusElement = document.getElementById('vscode-status');
-      if (statusElement) {
-        const iconId = connected ? 'icon-check-circle' : 'icon-x-circle';
-        const iconColor = connected ? '#28a745' : '#dc3545';
-        const text = connected ? 'VS Code: Connected' : 'VS Code: Disconnected';
-        
-        statusElement.innerHTML = `
-          <div>
-            <svg class="status-icon" style="color: ${iconColor};">
-              <use href="#${iconId}"/>
-            </svg>
-            <span>${text}</span>
-          </div>
-        `;
-        statusElement.className = connected ? 'connected' : 'disconnected';
       }
     }
     

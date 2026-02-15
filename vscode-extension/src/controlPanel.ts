@@ -1,12 +1,12 @@
 import * as vscode from 'vscode';
-import * as child_process from 'child_process';
+import * as childProcess from 'child_process';
 import * as path from 'path';
 import * as http from 'http';
-import { Icons, StatusColors, getColoredIcon } from './icons';
+import { ICONS, STATUS_COLORS, getColoredIcon } from './icons';
 
 export class ControlPanelProvider {
     private panel: vscode.WebviewPanel | undefined;
-    private serverProcess: child_process.ChildProcess | null = null;
+    private serverProcess: childProcess.ChildProcess | null = null;
     private statusCheckInterval: NodeJS.Timeout | null = null;
     private isServerRunning = false;
     private context: vscode.ExtensionContext;
@@ -149,7 +149,7 @@ export class ControlPanelProvider {
         try {
             const serverPath = path.join(this.context.extensionPath, 'figma-bridge-server.js');
             
-            this.serverProcess = child_process.spawn('node', [serverPath], {
+            this.serverProcess = childProcess.spawn('node', [serverPath], {
                 cwd: this.context.extensionPath,
                 stdio: 'pipe'
             });
@@ -548,35 +548,35 @@ export class ControlPanelProvider {
         <div class="card">
             <div class="card-header">
                 <div class="icon">
-                    ${Icons.server}
+                    ${ICONS.server}
                 </div>
                 <h2>Server Status</h2>
             </div>
 
             <div class="status connecting" id="httpStatus">
-                <div class="icon">${Icons.spinner}</div>
+                <div class="icon">${ICONS.spinner}</div>
                 <span class="label">HTTP Server</span>
                 <span class="value">Checking...</span>
             </div>
 
             <div class="status connecting" id="wsStatus">
-                <div class="icon">${Icons.spinner}</div>
+                <div class="icon">${ICONS.spinner}</div>
                 <span class="label">WebSocket Server</span>
                 <span class="value">Checking...</span>
             </div>
 
             <button class="button primary" id="startBtn" onclick="sendCommand('startServer')">
-                ${Icons.playCircle}
+                ${ICONS.playCircle}
                 <span>Start Server</span>
             </button>
 
             <button class="button danger" id="stopBtn" onclick="sendCommand('stopServer')" disabled>
-                ${Icons.stopCircle}
+                ${ICONS.stopCircle}
                 <span>Stop Server</span>
             </button>
 
             <button class="button secondary" id="restartBtn" onclick="sendCommand('restartServer')" disabled>
-                ${Icons.refreshCircle}
+                ${ICONS.refreshCircle}
                 <span>Restart Server</span>
             </button>
         </div>
@@ -585,13 +585,13 @@ export class ControlPanelProvider {
         <div class="card">
             <div class="card-header">
                 <div class="icon">
-                    ${Icons.activity}
+                    ${ICONS.activity}
                 </div>
                 <h2>Connection Test</h2>
             </div>
 
             <div class="status connecting" id="testStatus">
-                <div class="icon">${Icons.link}</div>
+                <div class="icon">${ICONS.link}</div>
                 <span class="label">Status</span>
                 <span class="value">Ready to test</span>
             </div>
@@ -599,7 +599,7 @@ export class ControlPanelProvider {
             <div id="latencyInfo"></div>
 
             <button class="button primary" onclick="sendCommand('testConnection')">
-                ${Icons.zap}
+                ${ICONS.zap}
                 <span>Test Connection</span>
             </button>
         </div>
@@ -608,7 +608,7 @@ export class ControlPanelProvider {
         <div class="card full-width">
             <div class="card-header">
                 <div class="icon">
-                    ${Icons.fileCode}
+                    ${ICONS.fileCode}
                 </div>
                 <h2>Server Logs</h2>
             </div>
@@ -661,22 +661,22 @@ export class ControlPanelProvider {
             // Update HTTP status
             if (data.http) {
                 httpStatus.className = 'status connected';
-                httpStatus.querySelector('.icon').innerHTML = '${getColoredIcon('checkCircle', StatusColors.connected)}';
+                httpStatus.querySelector('.icon').innerHTML = '${getColoredIcon('checkCircle', STATUS_COLORS.connected)}';
                 httpStatus.querySelector('.value').textContent = 'Running';
             } else {
                 httpStatus.className = 'status disconnected';
-                httpStatus.querySelector('.icon').innerHTML = '${getColoredIcon('xCircle', StatusColors.disconnected)}';
+                httpStatus.querySelector('.icon').innerHTML = '${getColoredIcon('xCircle', STATUS_COLORS.disconnected)}';
                 httpStatus.querySelector('.value').textContent = 'Offline';
             }
 
             // Update WebSocket status
             if (data.websocket) {
                 wsStatus.className = 'status connected';
-                wsStatus.querySelector('.icon').innerHTML = '${getColoredIcon('checkCircle', StatusColors.connected)}';
+                wsStatus.querySelector('.icon').innerHTML = '${getColoredIcon('checkCircle', STATUS_COLORS.connected)}';
                 wsStatus.querySelector('.value').textContent = 'Connected';
             } else {
                 wsStatus.className = 'status disconnected';
-                wsStatus.querySelector('.icon').innerHTML = '${getColoredIcon('xCircle', StatusColors.disconnected)}';
+                wsStatus.querySelector('.icon').innerHTML = '${getColoredIcon('xCircle', STATUS_COLORS.disconnected)}';
                 wsStatus.querySelector('.value').textContent = 'Offline';
             }
 
@@ -693,7 +693,7 @@ export class ControlPanelProvider {
 
             if (data.http.ok && data.websocket.ok) {
                 testStatus.className = 'status connected';
-                testStatus.querySelector('.icon').innerHTML = '${getColoredIcon('checkCircle', StatusColors.connected)}';
+                testStatus.querySelector('.icon').innerHTML = '${getColoredIcon('checkCircle', STATUS_COLORS.connected)}';
                 testStatus.querySelector('.value').textContent = 'All systems operational';
                 
                 latencyInfo.innerHTML = \`
@@ -702,7 +702,7 @@ export class ControlPanelProvider {
                 \`;
             } else {
                 testStatus.className = 'status disconnected';
-                testStatus.querySelector('.icon').innerHTML = '${getColoredIcon('xCircle', StatusColors.disconnected)}';
+                testStatus.querySelector('.icon').innerHTML = '${getColoredIcon('xCircle', STATUS_COLORS.disconnected)}';
                 testStatus.querySelector('.value').textContent = 'Connection failed';
                 
                 latencyInfo.innerHTML = \`
@@ -730,7 +730,7 @@ export class ControlPanelProvider {
             const notification = document.createElement('div');
             notification.className = \`notification \${type}\`;
             notification.innerHTML = \`
-                <div class="icon">${Icons.checkCircle}</div>
+                <div class="icon">${ICONS.checkCircle}</div>
                 <span>\${message}</span>
             \`;
             document.body.appendChild(notification);
