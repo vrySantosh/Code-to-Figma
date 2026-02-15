@@ -40,28 +40,34 @@
   "contributes": {
     "commands": [
       {
-        "command": "codeToFigma.openControlPanel",
-        "title": "Open Control Panel",
-        "category": "Code to Figma",
-        "icon": "$(dashboard)"
-      },
-      {
         "command": "codeToFigma.startServer",
         "title": "Start Bridge Server",
         "category": "Code to Figma",
-        "icon": "$(play)"
+        "icon": "$(play-circle)"
       },
       {
         "command": "codeToFigma.stopServer",
         "title": "Stop Bridge Server",
         "category": "Code to Figma",
-        "icon": "$(debug-stop)"
+        "icon": "$(stop-circle)"
+      },
+      {
+        "command": "codeToFigma.restartServer",
+        "title": "Restart Bridge Server",
+        "category": "Code to Figma",
+        "icon": "$(refresh)"
       },
       {
         "command": "codeToFigma.testConnection",
         "title": "Test Connection",
         "category": "Code to Figma",
-        "icon": "$(pulse)"
+        "icon": "$(heart)"
+      },
+      {
+        "command": "codeToFigma.clearLogs",
+        "title": "Clear Logs",
+        "category": "Code to Figma",
+        "icon": "$(clear-all)"
       },
       {
         "command": "codeToFigma.convertToJSON",
@@ -88,16 +94,19 @@
     "menus": {
       "commandPalette": [
         {
-          "command": "codeToFigma.openControlPanel"
-        },
-        {
           "command": "codeToFigma.startServer"
         },
         {
           "command": "codeToFigma.stopServer"
         },
         {
+          "command": "codeToFigma.restartServer"
+        },
+        {
           "command": "codeToFigma.testConnection"
+        },
+        {
+          "command": "codeToFigma.clearLogs"
         }
       ],
       "editor/context": [
@@ -115,15 +124,14 @@
     },
     "keybindings": [
       {
-        "command": "codeToFigma.openControlPanel",
-        "key": "ctrl+shift+f",
-        "mac": "cmd+shift+f",
-        "when": "!findInputFocussed"
-      },
-      {
         "command": "codeToFigma.exportToFigma",
         "key": "ctrl+alt+e",
         "mac": "cmd+alt+e"
+      },
+      {
+        "command": "codeToFigma.restartServer",
+        "key": "ctrl+shift+r",
+        "mac": "cmd+shift+r"
       }
     ],
     "configuration": {
@@ -168,16 +176,21 @@
     "views": {
       "codeToFigma": [
         {
+          "id": "codeToFigmaServer",
+          "name": "Server & Logs",
+          "icon": "$(server-process)"
+        },
+        {
           "id": "codeToFigmaComponents",
           "name": "Components",
-          "icon": "resources/icon.svg"
+          "icon": "$(symbol-class)"
         }
       ]
     },
     "viewsWelcome": [
       {
-        "view": "codeToFigmaComponents",
-        "contents": "Welcome to Code to Figma!\n\n[Open Control Panel](command:codeToFigma.openControlPanel)\n\nStart by opening the control panel to manage your bridge server and monitor connections.\n\n[Start Bridge Server](command:codeToFigma.startServer)\n\nOr start the bridge server directly to begin exporting components."
+        "view": "codeToFigmaServer",
+        "contents": "Welcome to Code to Figma!\n\n[Start Bridge Server](command:codeToFigma.startServer)\n\nStart the bridge server to enable communication between VS Code and Figma.\n\n[Test Connection](command:codeToFigma.testConnection)\n\nTest the connection to ensure everything is working properly."
       }
     ]
   },

@@ -3,9 +3,9 @@ import { ComponentParser } from './parser';
 import { FigmaClient } from './figmaClient';
 import { SyncManager } from './syncManager';
 import { ComponentsTreeProvider } from './treeProvider';
-import { ControlPanelProvider } from './controlPanel';
+import { ServerTreeProvider } from './serverTreeProvider';
 
-let controlPanel: ControlPanelProvider;
+let serverTreeProvider: ServerTreeProvider;
 let statusBarItem: vscode.StatusBarItem;
 
 export function activate(context: vscode.ExtensionContext) {
@@ -15,30 +15,35 @@ export function activate(context: vscode.ExtensionContext) {
     const figmaClient = new FigmaClient(context);
     const syncManager = new SyncManager(context, figmaClient);
     const componentsTreeProvider = new ComponentsTreeProvider(context);
-    controlPanel = new ControlPanelProvider(context);
+    serverTreeProvider = new ServerTreeProvider(context);
 
     // Register tree view providers
     vscode.window.registerTreeDataProvider('codeToFigmaComponents', componentsTreeProvider);
+    vscode.window.registerTreeDataProvider('codeToFigmaServer', serverTreeProvider);
     
-    // Command: Open Control Panel
-    const openControlPanel = vscode.commands.registerCommand('codeToFigma.openControlPanel', () => {
-        controlPanel.show();
-    });
-
     // Command: Start Server
     const startServer = vscode.commands.registerCommand('codeToFigma.startServer', async () => {
-        await controlPanel.startServer();
+        await serverTreeProvider.startServer();
     });
 
     // Command: Stop Server
     const stopServer = vscode.commands.registerCommand('codeToFigma.stopServer', async () => {
-        await controlPanel.stopServer();
+        await serverTreeProvider.stopServer();
+    });
+
+    // Command: Restart Server
+    const restartServer = vscode.commands.registerCommand('codeToFigma.restartServer', async () => {
+        await serverTreeProvider.restartServer();
     });
 
     // Command: Test Connection
     const testConnection = vscode.commands.registerCommand('codeToFigma.testConnection', async () => {
-        controlPanel.show();
-        setTimeout(() => controlPanel.testConnection(), 500);
+        await serverTreeProvider.testConnection();
+    });
+
+    // Command: Clear Logs
+    const clearLogs = vscode.commands.registerCommand('codeToFigma.clearLogs', () => {
+        serverTreeProvider.clearLogs();
     });
     
     // Command: Convert Component to JSON
@@ -175,7 +180,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     // Enhanced status bar with connection status
     statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
-    statusBarItem.command = 'codeToFigma.openControlPanel';
+    statusBarItem.command = 'codeToFigma.testConnection';
     updateStatusBar('disconnected');
     statusBarItem.show();
 
@@ -199,22 +204,22 @@ export function activate(context: vscode.ExtensionContext) {
     // Auto-start server if enabled
     const config = vscode.workspace.getConfiguration('codeToFigma');
     if (config.get<boolean>('autoStartServer', false)) {
-        controlPanel.startServer();
+        serverTreeProvider.startServer();
     }
 
     context.subscriptions.push(
-        openControlPanel,
         startServer,
         stopServer,
+        restartServer,
         testConnection,
+        clearLogs,
         convertToJSON,
         exportToFigma,
         syncWithFigma,
         autoSync,
         fileWatcher,
         statusBarItem,
-        { dispose: () => clearInterval(statusInterval) },
-        { dispose: () => controlPanel.dispose() }
+        { dispose: () => clearInterval(statusInterval) }
     );
 }
 
@@ -224,7 +229,7 @@ function updateStatusBar(status: 'connected' | 'connecting' | 'disconnected') {
     switch (status) {
         case 'connected':
             statusBarItem.text = '$(check) Figma: Connected';
-            statusBarItem.tooltip = 'Bridge server is running. Click to open control panel.';
+            statusBarItem.tooltip = 'Bridge server is running. Click to test connection.';
             statusBarItem.backgroundColor = undefined;
             break;
         case 'connecting':
@@ -234,7 +239,7 @@ function updateStatusBar(status: 'connected' | 'connecting' | 'disconnected') {
             break;
         case 'disconnected':
             statusBarItem.text = '$(error) Figma: Disconnected';
-            statusBarItem.tooltip = 'Bridge server not running. Click to open control panel and start server.';
+            statusBarItem.tooltip = 'Bridge server not running. Click to test connection or start server from the Code to Figma sidebar.';
             statusBarItem.backgroundColor = new vscode.ThemeColor('statusBarItem.errorBackground');
             break;
     }
@@ -242,7 +247,5 @@ function updateStatusBar(status: 'connected' | 'connecting' | 'disconnected') {
 
 export function deactivate() {
     console.log('Code to Figma extension deactivated');
-    if (controlPanel) {
-        controlPanel.dispose();
-    }
+    // Cleanup is handled by VS Code's disposal of subscriptions
 }
