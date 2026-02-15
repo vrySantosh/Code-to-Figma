@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Code to Figma</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Import React Native and Web components into Figma designs with full fidelity">
+  <title>Code to Figma - Import Plugin</title>
   <style>
     * {
       box-sizing: border-box;
@@ -252,63 +254,107 @@
     .footer a:hover {
       text-decoration: underline;
     }
+    
+    .tips {
+      background: #fef3c7;
+      border-left: 3px solid #f59e0b;
+      padding: 12px 16px;
+      border-radius: 6px;
+      margin: 16px 0;
+      font-size: 11px;
+    }
+    
+    .tips strong {
+      color: #92400e;
+      display: block;
+      margin-bottom: 6px;
+    }
+    
+    .tips ul {
+      margin: 8px 0 0 0;
+      padding-left: 20px;
+      color: #78350f;
+      line-height: 1.7;
+    }
+    
+    .tips li {
+      margin-bottom: 4px;
+    }
   </style>
 </head>
 <body>
   <h1>🎨 Code to Figma</h1>
-  <p class="subtitle">Import your code components into Figma designs</p>
+  <p class="subtitle">Transform your codebase into editable Figma designs instantly</p>
   
   <div class="hero">
-    <h2>✨ Reverse-Engineer Your App</h2>
-    <p>Convert existing code into editable Figma designs. Perfect for documentation, design handoff, and creating specs from implementation.</p>
+    <h2>✨ The First Plugin That Goes Code → Figma</h2>
+    <p>Import React Native and Web components with complete style fidelity. Perfect for creating design documentation from existing implementations, design handoff, showing designers exactly what's built, and reverse-engineering apps into visual specs.</p>
   </div>
   
   <div class="features">
     <div class="feature">
-      <div class="feature-icon">📦</div>
-      <div class="feature-text">All RN Components</div>
+      <div class="feature-icon">�</div>
+      <div class="feature-text">React Native Support</div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🌐</div>
+      <div class="feature-text">Web HTML/CSS</div>
     </div>
     <div class="feature">
       <div class="feature-icon">🎨</div>
-      <div class="feature-text">Complete Styling</div>
+      <div class="feature-text">Full Style Fidelity</div>
     </div>
     <div class="feature">
       <div class="feature-icon">🔤</div>
-      <div class="feature-text">Smart Fonts</div>
+      <div class="feature-text">Smart Font Loading</div>
     </div>
     <div class="feature">
       <div class="feature-icon">🖼️</div>
-      <div class="feature-text">SVG Icons</div>
+      <div class="feature-text">SVG Icons & Images</div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">⚡</div>
+      <div class="feature-text">Auto-Layout Ready</div>
     </div>
   </div>
   
   <div class="instructions">
-    <h3>Quick Start</h3>
+    <h3>📖 How to Use</h3>
     <div class="step">
       <span class="step-number">1</span>
-      <span class="step-text">Extract your component data using your extraction script</span>
+      <span class="step-text"><strong>Extract Component Data:</strong> Use the extraction script to analyze your React Native or Web component. This generates a JSON representation of your UI with all styles and structure.</span>
     </div>
     <div class="step">
       <span class="step-number">2</span>
-      <span class="step-text">Copy the generated JSON output</span>
+      <span class="step-text"><strong>Copy JSON Output:</strong> The extractor will output a JSON object containing your component tree, styles, and metadata.</span>
     </div>
     <div class="step">
       <span class="step-number">3</span>
-      <span class="step-text">Paste below and click Import</span>
+      <span class="step-text"><strong>Select Target Device:</strong> Choose your target device dimensions or use custom sizes for web pages.</span>
+    </div>
+    <div class="step">
+      <span class="step-number">4</span>
+      <span class="step-text"><strong>Import to Figma:</strong> Paste the JSON below and click Import. Your component will be created with full fidelity, editable text, and proper auto-layout.</span>
     </div>
   </div>
   
-  <label for="deviceSelect">📱 Target Device</label>
+  <label for="deviceSelect">📱 Target Device / Canvas Size</label>
   <select id="deviceSelect">
-    <option value="375,812">iPhone 13/14/15 (375 × 812)</option>
-    <option value="390,844">iPhone 13 Pro/14 Pro/15 Pro (390 × 844)</option>
-    <option value="393,852">iPhone 15 Plus (393 × 852)</option>
-    <option value="430,932" selected>iPhone 14/15 Pro Max (430 × 932)</option>
-    <option value="428,926">iPhone 12/13 Pro Max (428 × 926)</option>
-    <option value="414,896">iPhone 11 Pro Max/XS Max (414 × 896)</option>
-    <option value="360,800">Android Medium (360 × 800)</option>
-    <option value="412,915">Android Large (412 × 915)</option>
-    <option value="custom">Custom Size</option>
+    <optgroup label="iPhone Models">
+      <option value="375,812">iPhone 13/14/15 (375 × 812)</option>
+      <option value="390,844">iPhone 13/14/15 Pro (390 × 844)</option>
+      <option value="393,852">iPhone 15 Plus (393 × 852)</option>
+      <option value="430,932" selected>iPhone 14/15 Pro Max (430 × 932)</option>
+      <option value="428,926">iPhone 12/13 Pro Max (428 × 926)</option>
+      <option value="414,896">iPhone 11 Pro Max/XS Max (414 × 896)</option>
+    </optgroup>
+    <optgroup label="Android Devices">
+      <option value="360,800">Android Medium (360 × 800)</option>
+      <option value="412,915">Android Large (412 × 915)</option>
+    </optgroup>
+    <optgroup label="Custom">
+      <option value="custom">Custom Dimensions (Web/Tablet)</option>
+    </optgroup>
   </select>
   
   <div id="customSizeContainer" style="display: none; margin-top: 12px;">
@@ -328,15 +374,40 @@
   <textarea id="jsonInput" placeholder='{
   "component": {
     "type": "View",
-    "name": "MyComponent",
-    "styles": { ... },
-    "children": [ ... ]
+    "name": "LoginScreen",
+    "styles": {
+      "flex": 1,
+      "backgroundColor": "#ffffff",
+      "padding": 24
+    },
+    "children": [
+      {
+        "type": "Text",
+        "text": "Welcome Back",
+        "styles": {
+          "fontSize": 24,
+          "fontWeight": "bold"
+        }
+      }
+    ]
   },
   "metadata": {
     "appName": "MyApp",
-    "framework": "React Native"
+    "framework": "React Native",
+    "version": "1.0.0"
   }
 }'></textarea>
+  
+  <div class="tips">
+    <strong>💡 Pro Tips:</strong>
+    <ul>
+      <li>Works with React Native (View, Text, Image, ScrollView, FlatList, TextInput, etc.)</li>
+      <li>Supports Web HTML elements (div, span, button, input, img, etc.)</li>
+      <li>All text layers are editable, images are imported, SVG icons are vectorized</li>
+      <li>Flexbox layouts automatically convert to Figma Auto-layout</li>
+      <li>Use Cmd/Ctrl+Enter to quickly import after pasting JSON</li>
+    </ul>
+  </div>
   
   <div class="buttons">
     <button class="secondary" id="cancel">Cancel</button>
@@ -344,11 +415,19 @@
   </div>
   
   <div class="footer">
-    Made with ❤️ for developers & designers •
-    <a href="https://github.com" target="_blank">Documentation</a>
+    <strong>Code to Figma</strong> v1.2 • Made with ❤️ for developers & designers<br>
+    <a href="https://github.com/vrySantosh/Code-to-Figma" target="_blank">Documentation</a> • 
+    <a href="https://github.com/vrySantosh/Code-to-Figma/issues" target="_blank">Report Issues</a> • 
+    <a href="https://github.com/vrySantosh/Code-to-Figma#examples" target="_blank">Examples</a>
+    <div style="margin-top: 8px; font-size: 10px; color: #9ca3af;">
+      Supports: React Native (View, Text, Image, ScrollView, FlatList, TextInput, etc.) • Web (HTML/CSS, div, button, input, etc.) • SVG Icons • Full Flexbox • Shadows & Gradients
+    </div>
   </div>
   
   <script>
+    // Plugin UI JavaScript
+    // Handles user interactions and communicates with the plugin backend
+    
     const jsonInput = document.getElementById('jsonInput');
     const createButton = document.getElementById('create');
     const cancelButton = document.getElementById('cancel');
@@ -357,7 +436,7 @@
     const customWidth = document.getElementById('customWidth');
     const customHeight = document.getElementById('customHeight');
     
-    // Handle device selection
+    // Handle device selection - show custom input fields when "Custom" is selected
     deviceSelect.addEventListener('change', () => {
       if (deviceSelect.value === 'custom') {
         customSizeContainer.style.display = 'block';
@@ -366,33 +445,46 @@
       }
     });
     
+    // Main import button handler
     createButton.onclick = () => {
       const value = jsonInput.value.trim();
+      
+      // Validate that JSON data is provided
       if (!value) {
-        alert('⚠️ Please paste your component JSON data first');
+        alert('⚠️ Please paste your component JSON data first.\n\nNeed help? Check the documentation for extraction script examples.');
         return;
       }
       
+      // Parse and validate JSON
       try {
         const data = JSON.parse(value);
         
+        // Validate required JSON structure
         // Basic validation
         if (!data.component) {
-          alert('⚠️ Invalid format: missing "component" field');
+          alert('⚠️ Invalid JSON Format\n\nYour JSON must include a "component" field with the component tree.\n\nExample:\n{\n  "component": { ... },\n  "metadata": { ... }\n}');
           return;
         }
         
-        // Get target dimensions
+        if (!data.component.type) {
+          alert('⚠️ Invalid Component\n\nThe component must have a "type" field (e.g., "View", "div", etc.).');
+          return;
+        }
+        
+        // Get target canvas dimensions
         let targetWidth, targetHeight;
         if (deviceSelect.value === 'custom') {
+          // Use custom dimensions or fallback to defaults
           targetWidth = parseInt(customWidth.value) || 390;
           targetHeight = parseInt(customHeight.value) || 844;
         } else {
+          // Parse preset device dimensions
           const [width, height] = deviceSelect.value.split(',').map(Number);
           targetWidth = width;
           targetHeight = height;
         }
         
+        // Send data to plugin backend for processing
         parent.postMessage({ 
           pluginMessage: { 
             type: 'create-design', 
@@ -404,7 +496,7 @@
           } 
         }, '*');
       } catch (error) {
-        alert('⚠️ Invalid JSON format. Please check your data and try again.\n\n' + error.message);
+        alert('⚠️ JSON Parse Error\n\nPlease ensure your JSON is properly formatted.\n\nCommon issues:\n• Missing quotes around property names\n• Trailing commas\n• Unescaped special characters\n\nError: ' + error.message);
       }
     };
     
